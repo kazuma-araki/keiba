@@ -1,0 +1,434 @@
+/* src/styles/analyzer.css */
+
+/* ==========================================================
+   デザイントークン（色・余白・角丸をここで一元管理）
+   ========================================================== */
+:root {
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #333333;
+  --color-text-strong: #111827;
+  --color-text-muted: #6b7280;
+  --color-text-faint: #9ca3af;
+
+  --color-primary: #059669;
+  --color-primary-hover: #047857;
+  --color-primary-dark: #065f46;
+  --color-primary-light: #d1fae5;
+  --color-primary-lighter: #ecfdf5;
+  --color-primary-border: #a7f3d0;
+  --color-accent: #10b981;
+  --color-best: #b91c1c;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans", "Yu Gothic", "Noto Sans JP", Meiryo, sans-serif;
+}
+
+/* 全体コンテナ */
+.analyzer-container {
+  max-width: 1280px; /* ← "max-w" は無効なプロパティだったため修正 */
+  margin: 0 auto;
+  padding: 24px;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ヘッダー */
+.analyzer-header {
+  margin-bottom: 32px;
+  border-bottom: 3px solid var(--color-primary);
+  padding-bottom: 16px;
+}
+
+.analyzer-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+}
+
+.analyzer-subtitle {
+  font-size: 14px;
+  color: var(--color-primary);
+  margin: 4px 0 0 0;
+}
+
+/* 入力エリア */
+.input-card {
+  background-color: var(--color-surface);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 32px;
+}
+
+.input-label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.input-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-md);
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+}
+
+.input-textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.btn-submit {
+  margin-top: 12px;
+  padding: 10px 24px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-submit:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-submit:active {
+  transform: translateY(1px);
+}
+
+.btn-submit:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* 並び替えコントロールバー */
+.sort-controls {
+  background-color: var(--color-surface);
+  padding: 16px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sort-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #4b5563;
+}
+
+.btn-sort {
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-sort:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-sort:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn-sort.active {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+/* テーブルカード */
+.result-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.result-header {
+  background-color: var(--color-primary-dark);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+}
+
+.result-badge {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+/* テーブル本体 */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-main {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px; /* 統計列が増えたため少し広げました */
+}
+
+/* テーブルヘッダー（見出し） */
+.table-th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-primary-lighter);
+  color: var(--color-primary-dark);
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--color-primary-border);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.table-tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s;
+}
+
+/* ゼブラストライプで横長の表でも行を追いやすく */
+.table-tr:nth-child(even) {
+  background-color: #fbfdfc;
+}
+
+.table-tr:hover {
+  background-color: #f0fdf4;
+}
+
+/* 各セル */
+.table-td-name {
+  padding: 14px;
+  font-weight: bold;
+  color: var(--color-text-strong);
+  border-right: 1px solid var(--color-border);
+  background-color: inherit;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* 順位バッジ */
+.rank-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* 統計データセル */
+.table-td-calc {
+  padding: 14px;
+  border-right: 1px solid var(--color-border);
+  background-color: #f9fafb;
+  vertical-align: middle;
+}
+
+.calc-group {
+  margin-bottom: 6px;
+}
+
+.calc-group:last-child {
+  margin-bottom: 0;
+}
+
+.calc-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  display: block;
+  margin-bottom: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.calc-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #374151;
+}
+
+.calc-value.best {
+  color: var(--color-best); /* 最速値は赤で目立たせる */
+}
+
+.calc-value.best::before {
+  content: "★ ";
+  font-size: 11px;
+}
+
+/* 基本情報 */
+.table-td-info {
+  padding: 14px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  word-break: break-all;
+  vertical-align: top;
+}
+
+/* 過去走の各セル */
+.table-td-race {
+  padding: 14px;
+  border-left: 1px solid var(--color-border);
+  vertical-align: top;
+  min-width: 140px;
+}
+
+.table-td-empty {
+  padding: 14px;
+  color: #6b7280; /* 元の #9ca3af だと薄すぎて読みにくいため濃くした */
+  background-color: #f9fafb;
+  font-style: italic;
+  border-left: 1px solid var(--color-border);
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* レース内の文字装飾 */
+.race-speed {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--color-primary-hover);
+}
+
+.race-speed-unit {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--color-text-faint);
+}
+
+.race-meta {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-top: 4px;
+}
+
+.race-condition-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.race-time {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  margin-top: 4px;
+}
+
+/* 失速バッジ（1レース単位・馬単位の両方で使用） */
+.race-slowdown-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  color: #b45309;
+  background-color: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* 加速（好走の上がり）バッジ（1レース単位・馬単位の両方で使用） */
+.race-acceleration-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: bold;
+  color: #1d4ed8;
+  background-color: #dbeafe;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* ==========================================================
+   レスポンシブ対応（狭い画面ではカードの余白・文字を詰める）
+   ========================================================== */
+@media (max-width: 768px) {
+  .analyzer-container {
+    padding: 12px;
+  }
+
+  .analyzer-title {
+    font-size: 22px;
+  }
+
+  .input-card,
+  .sort-controls {
+    padding: 16px;
+  }
+
+  .sort-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
