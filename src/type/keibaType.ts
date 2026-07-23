@@ -16,6 +16,17 @@ export interface PastRace {
   isSlowFinish: boolean;
   // last3FExcessSeconds が一定の閾値を下回っていたら true（1レース単位の加速判定＝好走の上がり）
   isFastFinish: boolean;
+  // 重賞グレード（G1/G2/G3）。レーステキストから検出できなければnull（一般戦・特別戦等）。
+  grade: 'G1' | 'G2' | 'G3' | null;
+  // 同条件（競馬場・トラック種別・距離・馬場状態・グレード）の基準タイムに対するzスコア。
+  // プラスが大きいほど基準より速い。該当する基準タイムが無い場合はnull。
+  baselineSpeedIndex: number | null;
+  // baselineSpeedIndexの算出根拠となった基準タイムのサンプル数（少ないほど参考値）。
+  baselineSampleCount: number | null;
+  // 同条件のレース全体の参考上がり3Fに対するzスコア（この馬個別のではなくレース単位の基準と比較）。
+  // プラスが大きいほど基準より速い上がり。該当する基準が無ければnull。
+  last3FBaselineIndex: number | null;
+  last3FBaselineSampleCount: number | null;
 }
 
 export interface HorseData {
@@ -33,4 +44,11 @@ export interface HorseData {
   hasFrontalCollapse?: boolean; // 先行大敗検知
   isSlowFinisher?: boolean;     // 失速傾向判定
   isFastFinisher?: boolean;     // 好走の上がり（加速）傾向判定
+  // 過去走のbaselineSpeedIndexの平均（コース・距離・馬場状態・グレードで正規化済み）。
+  // 今回の出走メンバー内だけで比較するdeviationと違い、条件が異なる過去走同士も比較できる。
+  avgBaselineSpeedIndex?: number | null;
+  // avgBaselineSpeedIndexの信頼度（0〜100%）。新しさ×基準の信頼度×今日の条件との
+  // 一致度で決まる重みの合計が、理論上の最大値に対してどれだけあるかを表す。
+  // 低いほど「過去走の大半が今日と条件違い、または基準タイムが薄い」ことを意味する。
+  avgBaselineSpeedIndexConfidence?: number | null;
 }

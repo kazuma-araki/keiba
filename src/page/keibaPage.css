@@ -321,6 +321,12 @@
   font-size: 11px;
 }
 
+.calc-confidence {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-left: 6px;
+}
+
 /* 基本情報 */
 .table-td-info {
   padding: 14px;

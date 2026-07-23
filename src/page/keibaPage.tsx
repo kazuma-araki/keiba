@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { parseCsvToHorses, scrapedHorsesToHorseData, scrapedHorsesToCsvText } from '../utils/horseParser';
 import { parseJraHtml } from '../utils/getInfo';
+import { LOW_CONFIDENCE_THRESHOLD } from '../utils/baseline';
+import { computeWeightedBaselineSpeedIndex } from '../utils/raceWeighting';
+import type { TodayRaceCondition } from '../utils/raceWeighting';
 import type { HorseData, PastRace } from '../type/keibaType';
-import './keibaPage.css'; 
+import './keibaPage.css';
 
 type SortKey = 'none' | 'best' | 'avg' | 'deviation';
 
@@ -10,6 +13,10 @@ export default function AnalyzerDashboard() {
   const [rawText, setRawText] = useState('');
   const [horses, setHorses] = useState<HorseData[]>([]);
   const [sortBy, setSortBy] = useState<SortKey>('none');
+  // 今日のレース条件：出走メンバーの過去走を「今日と同じ条件に近いほど重視」して
+  // 集計するために使う（ブラウザ内で完結する計算で、通信は発生しない）
+  const [todayTrackType, setTodayTrackType] = useState<TodayRaceCondition['trackType']>('芝');
+  const [todayDistance, setTodayDistance] = useState<number>(1600);
 
   const handleAnalyse = () => {
     const parsedData = parseCsvToHorses(rawText);
@@ -60,16 +67,33 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fastFinishCount = validRaces.filter(r => r.isFastFinish).length;
     const isFastFinisher = validRaces.length > 0 && fastFinishCount / validRaces.length >= 0.5;
 
-    return { ...horse, bestSpeed, avgSpeed, isSlowFinisher, isFastFinisher };
+    // 基準タイム比較指数：過去走ごとのbaselineSpeedIndexを、新しさ×基準の
+    // 信頼度（サンプル数）×今日のレースとのサーフェス/距離一致度で重み付けして平均する。
+    // 単純平均だと、芝ダ混在・距離バラバラな過去4走がそのまま同列に扱われてしまうため。
+    const weightedBaseline = computeWeightedBaselineSpeedIndex(horse.races, {
+      trackType: todayTrackType,
+      distance: todayDistance,
+    });
+    const avgBaselineSpeedIndex = weightedBaseline?.value ?? null;
+    const avgBaselineSpeedIndexConfidence = weightedBaseline?.confidencePercent ?? null;
+
+    return { ...horse, bestSpeed, avgSpeed, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence };
     });
 
-    const averages = horsesWithStats.map(h => h.avgSpeed).filter(v => v !== 999);
-    const groupAvg = averages.length > 0 ? averages.reduce((a, b) => a + b, 0) / averages.length : 0;
-    const stdDev = Math.sqrt(averages.map(x => Math.pow(x - groupAvg, 2)).reduce((a, b) => a + b, 0) / (averages.length || 1));
+    // 偏差値は「今回の出走メンバー内での相対比較」という枠組みは維持しつつ、
+    // 中身は条件補正していない生の秒/m平均(avgSpeed)ではなく、コース・距離・
+    // 馬場状態・グレードで正規化済みのavgBaselineSpeedIndexを使う。
+    // avgBaselineSpeedIndexは「大きいほど良い」なので、avgSpeed（小さいほど良い）
+    // の時とは差分の符号が逆になる点に注意。
+    const baselineAverages = horsesWithStats
+      .map(h => h.avgBaselineSpeedIndex)
+      .filter((v): v is number => v !== null);
+    const groupAvg = baselineAverages.length > 0 ? baselineAverages.reduce((a, b) => a + b, 0) / baselineAverages.length : 0;
+    const stdDev = Math.sqrt(baselineAverages.map(x => Math.pow(x - groupAvg, 2)).reduce((a, b) => a + b, 0) / (baselineAverages.length || 1));
 
     const withDeviation = horsesWithStats.map(h => ({
       ...h,
-      deviation: h.avgSpeed === 999 ? 0 : 50 + ((groupAvg - h.avgSpeed) * 10 / (stdDev || 1))
+      deviation: h.avgBaselineSpeedIndex == null ? 0 : 50 + ((h.avgBaselineSpeedIndex - groupAvg) * 10 / (stdDev || 1))
     }));
 
     if (sortBy === 'best') return [...withDeviation].sort((a, b) => a.bestSpeed - b.bestSpeed);
@@ -84,6 +108,26 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     <div className="analyzer-container">
       {/* 入力エリア（条件に関わらず常に表示） */}
       <div className="input-area">
+        <div className="today-condition">
+          <span className="sort-label">今日のレース条件:</span>
+          <select
+            value={todayTrackType}
+            onChange={(e) => setTodayTrackType(e.target.value as TodayRaceCondition['trackType'])}
+          >
+            <option value="芝">芝</option>
+            <option value="ダ">ダート</option>
+            <option value="障害">障害</option>
+          </select>
+          <input
+            type="number"
+            value={todayDistance}
+            onChange={(e) => setTodayDistance(Number(e.target.value) || 0)}
+            min={800}
+            max={4300}
+            step={100}
+          />
+          <span>m</span>
+        </div>
         <input type="file" onChange={handleFileChange} />
         <textarea value={rawText} onChange={(e) => setRawText(e.target.value)} />
         <button onClick={handleAnalyse}>手動解析</button>
@@ -122,6 +166,11 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     <span className={`calc-value ${(horse.deviation ?? 0) > 60 ? 'high-score' : ''}`}>
                     {horse.deviation ? horse.deviation.toFixed(1) : '-'}
                     </span>
+                    {horse.deviation != null && horse.avgBaselineSpeedIndexConfidence != null && (
+                    <span className="calc-confidence">
+                        信頼度 {horse.avgBaselineSpeedIndexConfidence.toFixed(0)}%
+                    </span>
+                    )}
                 </div>
                 <div className="calc-group">
                     <span className="calc-label">過去最速</span>
@@ -149,9 +198,25 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     return (
                         <td key={raceIdx} className="table-td-race">
                         <div className="race-speed">{race.secondsPerMeter.toFixed(4)} <span className="race-speed-unit">秒/m</span></div>
-                        <div className="race-meta">{race.location}・{race.trackType}{race.distance}m</div>
+                        <div className="race-meta">{race.location}・{race.trackType}{race.distance}m{race.grade ? `（${race.grade}）` : ''}</div>
                         <div className="race-condition-badge">馬場: {race.condition}</div>
                         <div className="race-time">タイム: {race.timeStr}</div>
+                        {race.baselineSpeedIndex != null ? (
+                        <div className="race-condition-badge">
+                            基準比較: {race.baselineSpeedIndex.toFixed(2)}
+                            {race.baselineSampleCount != null && race.baselineSampleCount < LOW_CONFIDENCE_THRESHOLD ? `（参考値 n=${race.baselineSampleCount}）` : ''}
+                        </div>
+                        ) : (
+                        <div className="race-condition-badge">基準比較: -（該当データなし）</div>
+                        )}
+                        {race.last3FBaselineIndex != null ? (
+                        <div className="race-condition-badge">
+                            上がり3F基準比較: {race.last3FBaselineIndex.toFixed(2)}
+                            {race.last3FBaselineSampleCount != null && race.last3FBaselineSampleCount < LOW_CONFIDENCE_THRESHOLD ? `（参考値 n=${race.last3FBaselineSampleCount}）` : ''}
+                        </div>
+                        ) : (
+                        <div className="race-condition-badge">上がり3F基準比較: -（該当データなし）</div>
+                        )}
                         {race.isSlowFinish && (
                         <div className="race-slowdown-badge">
                             ⚠️ 失速 (+{race.last3FExcessSeconds?.toFixed(2)}秒)

@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import type { PastRace } from "../type/keibaType";
+import { computeBaselineSpeedIndex, computeLast3FBaselineIndex } from "./baseline";
 
 export interface ScrapedHorse {
   horseName: string;
@@ -17,6 +18,25 @@ const SLOW_FINISH_THRESHOLD_SECONDS = 0.5;
 // この秒数以上、前半の平均ペースより上がり3Fが速ければ「加速（好走の上がり）」と判定する。
 // マイナス値で指定（last3FExcessSecondsがこれを下回ったら加速判定）
 const FAST_FINISH_THRESHOLD_SECONDS = -0.5;
+
+// jra-batch側の基準タイムと突き合わせるための競馬場名（10場）。
+// raceTextの「日付の次のトークン」には開催回・日目などが付着することがあるため、
+// この既知の場名リストで本来の場所名だけを抜き出す。
+const KNOWN_TRACKS = ['札幌', '函館', '福島', '新潟', '東京', '中山', '中京', '京都', '阪神', '小倉'];
+function normalizeLocationForBaseline(raw: string): string | null {
+  return KNOWN_TRACKS.find(t => raw.includes(t)) ?? null;
+}
+
+// 重賞グレードの検出（G1/G2/G3、全角Ｇ＋ローマ数字、半角G+アラビア数字/ローマ数字のいずれにも対応）
+function detectGrade(raceText: string): 'G1' | 'G2' | 'G3' | null {
+  const match = raceText.match(/[GＧ]\s*(Ⅰ|Ⅱ|Ⅲ|III|II|I|3|2|1)(?!\d)/);
+  if (!match) return null;
+  const marker = match[1];
+  if (marker === 'Ⅰ' || marker === 'I' || marker === '1') return 'G1';
+  if (marker === 'Ⅱ' || marker === 'II' || marker === '2') return 'G2';
+  if (marker === 'Ⅲ' || marker === 'III' || marker === '3') return 'G3';
+  return null;
+}
 
 /**
  * JRA出馬表HTMLから出走馬と過去4走のテキストデータを抽出する
@@ -148,6 +168,23 @@ export function parseRaceText(raceText: string): PastRace | null {
     const isFastFinish =
       last3FExcessSeconds !== null && last3FExcessSeconds < FAST_FINISH_THRESHOLD_SECONDS;
 
+    const grade = detectGrade(raceText);
+
+    // 基準タイムとの突き合わせ（jra-batchが生成した静的JSONをバンドルしているだけなので
+    // 通信は発生しない＝追加コストなし）。場所名が既知の10場に一致しない場合など、
+    // 該当する基準が無ければnullのまま。
+    const baselineLocation = normalizeLocationForBaseline(location);
+    const baselineResult = baselineLocation
+      ? computeBaselineSpeedIndex(secondsPerMeter, baselineLocation, trackType, distance, condition, grade)
+      : null;
+
+    // 上がり3F基準との突き合わせ。この馬個別の上がり3Fを、同条件のレース全体の
+    // 参考上がり3F基準と比べる（レース単位の基準である点はbaseline.ts参照）。
+    const last3FBaselineResult =
+      baselineLocation && last3F !== null
+        ? computeLast3FBaselineIndex(last3F, baselineLocation, trackType, distance, condition, grade)
+        : null;
+
     return {
       dateStr,
       location,
@@ -160,7 +197,12 @@ export function parseRaceText(raceText: string): PastRace | null {
       last3F,
       last3FExcessSeconds,
       isSlowFinish,
-      isFastFinish
+      isFastFinish,
+      grade,
+      baselineSpeedIndex: baselineResult?.speedIndex ?? null,
+      baselineSampleCount: baselineResult?.sampleCount ?? null,
+      last3FBaselineIndex: last3FBaselineResult?.speedIndex ?? null,
+      last3FBaselineSampleCount: last3FBaselineResult?.sampleCount ?? null
     };
   } catch (error) {
     console.error('レースのパースに失敗しました:', raceText, error);
