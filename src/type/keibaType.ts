@@ -37,8 +37,6 @@ export interface HorseData {
   // 失敗分を詰めて(compactして)配列を短くしないようにする。
   races: (PastRace | null)[];
   // オプショナルな分析用プロパティ
-  bestSpeed?: number;
-  avgSpeed?: number;
   deviation?: number;
   avg3F?: number;
   hasFrontalCollapse?: boolean; // 先行大敗検知

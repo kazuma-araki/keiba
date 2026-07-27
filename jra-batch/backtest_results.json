@@ -1,0 +1,38 @@
+{
+  "trainYears": [
+    2025
+  ],
+  "testYears": [
+    2026
+  ],
+  "gradeOnly": {
+    "totalRaces": 1938,
+    "racesWithPrediction": 1838,
+    "totalHorses": 26976,
+    "scoredHorses": 23079,
+    "winHits": 312,
+    "placeHits": 764,
+    "spearmanSum": 558.365454205236,
+    "spearmanRaceCount": 1838
+  },
+  "classTier": {
+    "totalRaces": 1938,
+    "racesWithPrediction": 1838,
+    "totalHorses": 26976,
+    "scoredHorses": 23079,
+    "winHits": 302,
+    "placeHits": 749,
+    "spearmanSum": 569.530989108931,
+    "spearmanRaceCount": 1838
+  },
+  "naive": {
+    "totalRaces": 1938,
+    "racesWithPrediction": 1838,
+    "totalHorses": 26976,
+    "scoredHorses": 23080,
+    "winHits": 189,
+    "placeHits": 470,
+    "spearmanSum": 214.42805535537755,
+    "spearmanRaceCount": 1838
+  }
+}

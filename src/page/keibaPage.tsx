@@ -7,7 +7,7 @@ import type { TodayRaceCondition } from '../utils/raceWeighting';
 import type { HorseData, PastRace } from '../type/keibaType';
 import './keibaPage.css';
 
-type SortKey = 'none' | 'best' | 'avg' | 'deviation';
+type SortKey = 'none' | 'deviation';
 
 export default function AnalyzerDashboard() {
   const [rawText, setRawText] = useState('');
@@ -56,10 +56,7 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const validRaces = horse.races.filter(
         (r): r is PastRace => r !== null && r.secondsPerMeter > 0
     );
-    const speeds = validRaces.map(r => r.secondsPerMeter);
-    const bestSpeed = speeds.length > 0 ? Math.min(...speeds) : 999;
-    const avgSpeed = speeds.length > 0 ? speeds.reduce((sum, s) => sum + s, 0) / speeds.length : 999;
-    
+
     // 失速傾向：有効な過去走のうち半数以上が失速判定なら「失速しやすい馬」とみなす
     const slowFinishCount = validRaces.filter(r => r.isSlowFinish).length;
     const isSlowFinisher = validRaces.length > 0 && slowFinishCount / validRaces.length >= 0.5;
@@ -77,14 +74,12 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const avgBaselineSpeedIndex = weightedBaseline?.value ?? null;
     const avgBaselineSpeedIndexConfidence = weightedBaseline?.confidencePercent ?? null;
 
-    return { ...horse, bestSpeed, avgSpeed, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence };
+    return { ...horse, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence };
     });
 
     // 偏差値は「今回の出走メンバー内での相対比較」という枠組みは維持しつつ、
-    // 中身は条件補正していない生の秒/m平均(avgSpeed)ではなく、コース・距離・
+    // 中身は条件補正していない生の秒/m平均ではなく、コース・距離・
     // 馬場状態・グレードで正規化済みのavgBaselineSpeedIndexを使う。
-    // avgBaselineSpeedIndexは「大きいほど良い」なので、avgSpeed（小さいほど良い）
-    // の時とは差分の符号が逆になる点に注意。
     const baselineAverages = horsesWithStats
       .map(h => h.avgBaselineSpeedIndex)
       .filter((v): v is number => v !== null);
@@ -96,8 +91,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       deviation: h.avgBaselineSpeedIndex == null ? 0 : 50 + ((h.avgBaselineSpeedIndex - groupAvg) * 10 / (stdDev || 1))
     }));
 
-    if (sortBy === 'best') return [...withDeviation].sort((a, b) => a.bestSpeed - b.bestSpeed);
-    if (sortBy === 'avg') return [...withDeviation].sort((a, b) => a.avgSpeed - b.avgSpeed);
     if (sortBy === 'deviation') return [...withDeviation].sort((a, b) => b.deviation - a.deviation);
     return withDeviation;
   };
@@ -139,8 +132,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           <div className="sort-controls">
             <span className="sort-label">並び替え:</span>
             <button className={`btn-sort ${sortBy === 'none' ? 'active' : ''}`} onClick={() => setSortBy('none')}>馬番順</button>
-            <button className={`btn-sort ${sortBy === 'best' ? 'active' : ''}`} onClick={() => setSortBy('best')}>🚀 最高スピード順</button>
-            <button className={`btn-sort ${sortBy === 'avg' ? 'active' : ''}`} onClick={() => setSortBy('avg')}>📊 平均スピード順</button>
             <button className={`btn-sort ${sortBy === 'deviation' ? 'active' : ''}`} onClick={() => setSortBy('deviation')}>📈 偏差値順</button>
           </div>
 
@@ -171,14 +162,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         信頼度 {horse.avgBaselineSpeedIndexConfidence.toFixed(0)}%
                     </span>
                     )}
-                </div>
-                <div className="calc-group">
-                    <span className="calc-label">過去最速</span>
-                    <span className="calc-value">{horse.bestSpeed === 999 ? '-' : horse.bestSpeed.toFixed(4)}</span>
-                </div>
-                <div className="calc-group">
-                    <span className="calc-label">4走平均</span>
-                    <span className="calc-value">{horse.avgSpeed === 999 ? '-' : horse.avgSpeed.toFixed(4)}</span>
                 </div>
                 {horse.isSlowFinisher && (
                 <div className="calc-group">
