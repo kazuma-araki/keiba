@@ -23,6 +23,10 @@ export interface ParsedHorseResult {
   finishRank: number; // 着順（タイム不明で除外された馬は含めない中での順位）
   timeStr: string;
   totalSeconds: number;
+  // 単勝オッズ。行内の「タイム→着差→単勝オッズ」という並びのうち、
+  // 小数点付きの数値としては行内最後に出現するのがオッズなので、
+  // 「行内で最後にマッチした小数」を採用している（人気の丸数字は文字化けするため使わない）。
+  odds: number | null;
 }
 
 export type RaceGrade = 'G1' | 'G2' | 'G3' | null;
@@ -42,6 +46,11 @@ export interface ParsedRaceResult {
   // レース全体の参考上がり3F（秒）。「上り 4F ××．×―3F ××．×」の行から取得。
   // 個々の出走馬ごとの上がり3Fではなく、そのレース全体の指標値である点に注意。
   referenceLast3F: number | null;
+  // 馬連の払戻金額（円、100円あたり）。どの馬番の組み合わせで的中したかは
+  // 丸数字表記がPDFのフォント変換で文字化けし読み取れないが、着順(finishRank)から
+  // 1着・2着の馬は別途特定できるため、組み合わせ自体の抽出は不要。
+  // 発売なし・抽出失敗時はnull。
+  quinellaPayout: number | null;
   horses: ParsedHorseResult[];
 }
 
@@ -88,10 +97,14 @@ const CONDITION_WORDS = ['良', '稍重', '重', '不良'];
 const NO_FINISH_WORDS = /競走中止|除外|取消|失格|中止/;
 
 export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnostics): ParsedRaceResult[] {
-  // 5桁のレースID＋日付（例: "02001 1月24日"）を境目にレース単位で分割する
+  // 5桁のレースID＋日付（例: "02001 1月24日"）を境目にレース単位で分割する。
+  // IDと日付の間にスペースが入らない回（例:「3200111月 8日」）だと、\d{5}が
+  // ID全体ではなく1文字ずれた位置（ID末尾+月の先頭）にもマッチしてしまい、
+  // 余計な分割点ができてブロックの先頭がID途中からになってしまう。
+  // 直前が数字ではない位置からしか分割しないようにして防ぐ。
   const blocks = rawText
-    .split(/(?=\d{5}\s*\d+月\s*\d+日)/g)
-    .filter(b => /^\d{5}\s*\d+月\s*\d+日/.test(b.trim()));
+    .split(/(?<!\d)(?=\d{5}\s*\d{1,2}月\s*\d{1,2}日)/g)
+    .filter(b => /^\d{5}\s*\d{1,2}月\s*\d{1,2}日/.test(b.trim()));
 
   const results: ParsedRaceResult[] = [];
 
@@ -107,7 +120,10 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
     const year = parseInt(yearStr, 10);
     const kaisai = parseInt(kaisaiStr, 10);
 
-    const dateMatch = block.match(/(\d+)月\s*(\d+)日/);
+    // 月・日を桁数で区切って(1〜2桁)マッチさせる。IDと日付の間にスペースが
+    // 無い回でも、先頭5桁(ID)＋月(1〜2桁)という桁数の制約だけで正しく切り分けられる
+    // （上のブロック分割修正と合わせて、ブロックが必ずID先頭から始まる前提が効いている）。
+    const dateMatch = block.match(/^\d{5}\s*(\d{1,2})月\s*(\d{1,2})日/);
     const raceDate = dateMatch ? `${yearStr}年${dateMatch[1]}月${dateMatch[2]}日` : '不明';
 
     const dayMatch = block.match(/第(\d+)日/);
@@ -189,6 +205,12 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
     const referenceLast3F =
       last3FCandidate !== null && last3FCandidate >= 30 && last3FCandidate <= 50 ? last3FCandidate : null;
 
+    // 馬連配当：「馬 連」ラベル直後、組み合わせの丸数字（文字化けする）を挟んで
+    // 「○○円」の金額が続く。組み合わせ自体は着順から特定できるため金額だけ拾えば十分。
+    // 「枠連」と誤マッチしないよう「馬」に続く「連」だけを対象にする。
+    const quinellaMatch = block.match(/馬\s*連[^\d]{0,10}([\d，]{2,8})円/);
+    const quinellaPayout = quinellaMatch ? parseInt(quinellaMatch[1].replace(/，/g, ''), 10) : null;
+
     // 出走馬一覧：「（N頭）」より前の範囲だけを対象にする
     const headCountMatch = block.match(/（(\d+)頭）/);
     const horseSection = headCountMatch ? block.slice(0, headCountMatch.index) : block;
@@ -212,6 +234,7 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
         raceClassText,
         grade,
         referenceLast3F,
+        quinellaPayout,
         horses,
       });
     } else if (diagnostics) {
@@ -254,12 +277,18 @@ function extractHorseTimes(section: string): ParsedHorseResult[] {
       findColonTime(rowText) ?? findDittoTime(rowText, lastTime) ?? findShortTime(rowText);
 
     if (found) {
+      // 単勝オッズ：行内の小数（\d{1,3}．\d）のうち最後の出現がオッズ
+      // （タイムの小数部分より必ず後ろに来るため）。
+      const oddsMatches = rowText.match(/\d{1,3}[．.]\d/g);
+      const odds = oddsMatches ? parseFloat(oddsMatches[oddsMatches.length - 1].replace(/．/g, '.')) : null;
+
       // 着順はPDF内の掲載順（＝着順）そのもの。タイム不明で除外した馬は数えない。
       horses.push({
         name: matches[i].name,
         finishRank: horses.length + 1,
         timeStr: found.timeStr,
         totalSeconds: found.totalSeconds,
+        odds,
       });
       lastTime = found;
     }

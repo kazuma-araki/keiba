@@ -127,10 +127,13 @@ interface RaceFactRecord {
   grade: ParsedRaceResult['grade'];
   // レース全体の参考上がり3F（秒）。同じレースの馬全員で同じ値になる（レース単位の値のため）。
   raceLast3F: number | null;
+  // 馬連配当（円、100円あたり）。同じレースの馬全員で同じ値になる（レース単位の値のため）。
+  quinellaPayout: number | null;
   horseName: string;
   finishRank: number;
   timeStr: string;
   totalSeconds: number;
+  odds: number | null;
 }
 
 function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
@@ -152,10 +155,12 @@ function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
         raceClassText: race.raceClassText,
         grade: race.grade,
         raceLast3F: race.referenceLast3F,
+        quinellaPayout: race.quinellaPayout,
         horseName: horse.name,
         finishRank: horse.finishRank,
         timeStr: horse.timeStr,
         totalSeconds: horse.totalSeconds,
+        odds: horse.odds,
       });
     }
   }
