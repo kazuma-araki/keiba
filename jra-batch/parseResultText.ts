@@ -18,6 +18,67 @@
  *   直前の実タイムを引き継ぐ処理が必要。
  */
 
+import * as fs from 'fs';
+import * as path from 'path';
+
+// 騎手名の抽出は正規表現だけでは境界（馬主名との切れ目）が定まらず、
+// 特定の漢字がPDFのフォント変換で文字化けする問題もあるため、
+// netkeibaの騎手リーディングから取得した実在の騎手名簿と完全一致させる方式を取る
+// （jockeyRoster_2025.json / jockeyRoster_2026.json、jra-batch内に同梱）。
+interface JockeyRosterEntry { id: string; name: string; wins: number | null; winRate: number | null; placeRate: number | null; }
+
+function loadJockeyNames(): string[] {
+  const files = ['jockeyRoster_2025.json', 'jockeyRoster_2026.json'];
+  const names = new Set<string>();
+  for (const file of files) {
+    const filePath = path.join(__dirname, file);
+    if (!fs.existsSync(filePath)) continue;
+    const entries: JockeyRosterEntry[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    for (const e of entries) names.add(e.name);
+  }
+  // 長い名前から先にマッチさせるため長さ降順に並べておく
+  return Array.from(names).sort((a, b) => b.length - a.length);
+}
+
+const JOCKEY_NAMES = loadJockeyNames();
+const JOCKEY_NAME_SET = new Set(JOCKEY_NAMES);
+const MAX_JOCKEY_NAME_LENGTH = JOCKEY_NAMES.reduce((max, n) => Math.max(max, n.length), 0);
+
+// 斤量の直後（馬名・性齢・毛色より後ろ）を起点に、名簿と完全一致する
+// 最長の騎手名を左から順に探す。馬主名側で偶然一致するリスクを避けるため、
+// 検索範囲は斤量表記が収まる程度の短い窓に絞る。
+const JOCKEY_SEARCH_WINDOW = 40;
+
+// PDFのフォント変換で、特定の（稀な）漢字1文字だけが記号に化けることがある
+// （例:「鮫島克駿」→「)島克駿」「%島克駿」等、化け方自体は一定しない）。
+// 完全一致で見つからない場合だけ、1文字までの不一致を許容する2段目の照合を行う。
+function findJockeyNameFuzzy(window: string): string | null {
+  for (let start = 0; start < window.length; start++) {
+    for (const name of JOCKEY_NAMES) {
+      if (name.length < 3 || start + name.length > window.length) continue;
+      let diff = 0;
+      for (let k = 0; k < name.length && diff <= 1; k++) {
+        if (window[start + k] !== name[k]) diff++;
+      }
+      if (diff === 1) return name;
+    }
+  }
+  return null;
+}
+
+function findJockeyName(rowText: string, searchStart: number): string | null {
+  // 姓名の間に空白・タブが入ることがある（短い名前の均等割り付けの都合）ため、
+  // 名簿側（空白なし）と揃えるよう検索窓から空白類を除去してから照合する。
+  const window = rowText.slice(searchStart, searchStart + JOCKEY_SEARCH_WINDOW).replace(/[ \t　]/g, '');
+  for (let start = 0; start < window.length; start++) {
+    for (let len = Math.min(MAX_JOCKEY_NAME_LENGTH, window.length - start); len >= 2; len--) {
+      const candidate = window.slice(start, start + len);
+      if (JOCKEY_NAME_SET.has(candidate)) return candidate;
+    }
+  }
+  return findJockeyNameFuzzy(window);
+}
+
 export interface ParsedHorseResult {
   name: string;
   finishRank: number; // 着順（タイム不明で除外された馬は含めない中での順位）
@@ -27,6 +88,14 @@ export interface ParsedHorseResult {
   // 小数点付きの数値としては行内最後に出現するのがオッズなので、
   // 「行内で最後にマッチした小数」を採用している（人気の丸数字は文字化けするため使わない）。
   odds: number | null;
+  // 騎手名。名簿と一致しなかった場合はnull（診断カウンタで頻度を追跡する）。
+  jockeyName: string | null;
+  // 斤量（kg）。減量記号（▲△☆◇）がある場合は減量後の実斤量、無ければ基礎重量そのもの。
+  weight: number | null;
+  // 馬体重（kg）。
+  bodyWeight: number | null;
+  // 前走からの馬体重増減（kg）。初出走・比較対象なし等で「―」表記の場合はnull。
+  bodyWeightChange: number | null;
 }
 
 export type RaceGrade = 'G1' | 'G2' | 'G3' | null;
@@ -69,6 +138,9 @@ export interface ParseDiagnostics {
   // 競走中止・除外等で正式にタイムが記録されない馬がいる場合は自然に発生するため、
   // 0でないからといって直ちにパース不具合とは限らない（大きく乖離する場合の目安として使う）。
   horseCountMismatch: number;
+  // 騎手名簿と一致しなかった出走馬の頭数（抽出成功率＝1-jockeyNotMatched/totalHorseRowsで確認する）。
+  jockeyNotMatched: number;
+  totalHorseRows: number;
 }
 
 export function createParseDiagnostics(): ParseDiagnostics {
@@ -80,6 +152,8 @@ export function createParseDiagnostics(): ParseDiagnostics {
     skippedNoCondition: 0,
     skippedNoHorses: 0,
     horseCountMismatch: 0,
+    jockeyNotMatched: 0,
+    totalHorseRows: 0,
   };
 }
 
@@ -91,6 +165,8 @@ export function mergeDiagnostics(target: ParseDiagnostics, source: ParseDiagnost
   target.skippedNoCondition += source.skippedNoCondition;
   target.skippedNoHorses += source.skippedNoHorses;
   target.horseCountMismatch += source.horseCountMismatch;
+  target.jockeyNotMatched += source.jockeyNotMatched;
+  target.totalHorseRows += source.totalHorseRows;
 }
 
 const CONDITION_WORDS = ['良', '稍重', '重', '不良'];
@@ -215,7 +291,7 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
     const headCountMatch = block.match(/（(\d+)頭）/);
     const horseSection = headCountMatch ? block.slice(0, headCountMatch.index) : block;
 
-    const horses = extractHorseTimes(horseSection);
+    const horses = extractHorseTimes(horseSection, diagnostics);
     if (horses.length > 0) {
       if (diagnostics && headCountMatch) {
         const expectedCount = parseInt(headCountMatch[1], 10);
@@ -245,17 +321,17 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
   return results;
 }
 
-function extractHorseTimes(section: string): ParsedHorseResult[] {
+function extractHorseTimes(section: string, diagnostics?: ParseDiagnostics): ParsedHorseResult[] {
   // 馬名は「カタカナ2〜9文字」＋直後に性別記号(牡/牝/セ)＋年齢＋毛色、という並びで検出する。
   // 短い馬名は均等割り付けのため文字間に空白・タブが挿入されることがあるので許容し、
   // 抽出後に空白を除去して名前を復元する。
   // 性別記号はPDFのフォント変換の都合で稀に別の記号に化けることがある（日によって化け方が
   // 変わりうるため特定の文字には決め打ちしない）ため、直後に続く毛色の漢字で位置を裏取りする。
   const nameRegex = /((?:[ァ-ヶー][ \t　]*){2,9})\S\d{1,2}(?=[鹿栗芦黒青白栃])/g;
-  const matches: { name: string; index: number }[] = [];
+  const matches: { name: string; index: number; matchEnd: number }[] = [];
   let m: RegExpExecArray | null;
   while ((m = nameRegex.exec(section)) !== null) {
-    matches.push({ name: m[1].replace(/[ \t　]/g, ''), index: m.index });
+    matches.push({ name: m[1].replace(/[ \t　]/g, ''), index: m.index, matchEnd: m.index + m[0].length });
   }
 
   const horses: ParsedHorseResult[] = [];
@@ -273,7 +349,7 @@ function extractHorseTimes(section: string): ParsedHorseResult[] {
     // 体重増減の数字（例:「482－ 2」）がタイムの数字（例:「1：47．4」）と
     // 区切りなしで連結し「21：47．4」のように見えるケースがあるため、
     // 妥当な分数（0〜4分）になる位置が見つかるまで1文字ずつずらして探索する
-    const found: { timeStr: string; totalSeconds: number } | null =
+    const found: { timeStr: string; totalSeconds: number; matchIndex: number } | null =
       findColonTime(rowText) ?? findDittoTime(rowText, lastTime) ?? findShortTime(rowText);
 
     if (found) {
@@ -282,13 +358,48 @@ function extractHorseTimes(section: string): ParsedHorseResult[] {
       const oddsMatches = rowText.match(/\d{1,3}[．.]\d/g);
       const odds = oddsMatches ? parseFloat(oddsMatches[oddsMatches.length - 1].replace(/．/g, '.')) : null;
 
+      // 騎手名：性齢のマッチ末尾（＝毛色の直前）を起点に検索する。
+      // 間に挟まる毛色・斤量の文字は名簿のどの名前にも一致しないため、
+      // そのままスキャンさせても実害はない。
+      const jockeySearchStart = matches[i].matchEnd - start;
+      const jockeyName = findJockeyName(rowText, jockeySearchStart);
+      if (diagnostics) {
+        diagnostics.totalHorseRows++;
+        if (!jockeyName) diagnostics.jockeyNotMatched++;
+      }
+
+      // 斤量：毛色の直後の2桁。減量記号（▲△☆◇）付きの2桁がその後に続けば
+      // そちらが減量後の実斤量（例:「57\n54 ▲」なら54）。無ければ最初の2桁がそのまま実斤量。
+      const weightWindow = rowText.slice(jockeySearchStart, jockeySearchStart + 20);
+      const weightMatch = weightWindow.match(/(\d{2})(?:[^\d]{0,4}(\d{2})[^\d]{0,3}[▲△☆◇])?/);
+      const weight = weightMatch ? parseInt(weightMatch[2] ?? weightMatch[1], 10) : null;
+
+      // 馬体重・増減：タイムの直前に「482＋10」「446－ 4」「454± 0」のような形で出現。
+      // 増減が「―」（初出走等で比較対象なし）の場合は増減だけnullにする。
+      // タイムの数字と増減の数字の間に区切りが無いことがあるため、実際に見つかった
+      // タイムの開始位置より前の範囲だけを対象にして、時刻の桁を巻き込まないようにする。
+      // 「±」は常に増減0を表す記号であり、直後の「0」は時刻側の分の桁と隣接して区別が
+      // つかなくなることがあるため、数字を読み取らず「±」自体の有無だけで判定する。
+      const beforeTime = rowText.slice(0, found.matchIndex);
+      const bodyWeightMatch = beforeTime.match(/(\d{3})(?:(±)\s*0?|([＋+－\-])\s*(\d{1,2})|\s*([―ー]))(?=[^\d]*$)/);
+      const bodyWeight = bodyWeightMatch ? parseInt(bodyWeightMatch[1], 10) : null;
+      const bodyWeightChange = bodyWeightMatch
+        ? (bodyWeightMatch[2] ? 0
+          : bodyWeightMatch[3] ? (bodyWeightMatch[3] === '－' || bodyWeightMatch[3] === '-' ? -1 : 1) * parseInt(bodyWeightMatch[4], 10)
+          : null)
+        : null;
+
       // 着順はPDF内の掲載順（＝着順）そのもの。タイム不明で除外した馬は数えない。
       horses.push({
         name: matches[i].name,
         finishRank: horses.length + 1,
         timeStr: found.timeStr,
         totalSeconds: found.totalSeconds,
+        jockeyName,
         odds,
+        weight,
+        bodyWeight,
+        bodyWeightChange,
       });
       lastTime = found;
     }
@@ -298,7 +409,7 @@ function extractHorseTimes(section: string): ParsedHorseResult[] {
   return horses;
 }
 
-function findColonTime(rowText: string): { timeStr: string; totalSeconds: number } | null {
+function findColonTime(rowText: string): { timeStr: string; totalSeconds: number; matchIndex: number } | null {
   const re = /(\d{1,2})[：:](\d{2})[．.](\d)/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(rowText)) !== null) {
@@ -309,6 +420,7 @@ function findColonTime(rowText: string): { timeStr: string; totalSeconds: number
       return {
         timeStr: `${minutes}:${String(seconds).padStart(2, '0')}.${tenths}`,
         totalSeconds: minutes * 60 + seconds + tenths / 10,
+        matchIndex: m.index,
       };
     }
     // 分の値が非現実的（体重増減の数字を巻き込んでいる）場合、1文字ずらして再探索
@@ -320,14 +432,15 @@ function findColonTime(rowText: string): { timeStr: string; totalSeconds: number
 function findDittoTime(
   rowText: string,
   lastTime: { timeStr: string; totalSeconds: number } | null
-): { timeStr: string; totalSeconds: number } | null {
-  if (/〃/.test(rowText) && lastTime) {
-    return { ...lastTime };
+): { timeStr: string; totalSeconds: number; matchIndex: number } | null {
+  const idx = rowText.indexOf('〃');
+  if (idx !== -1 && lastTime) {
+    return { ...lastTime, matchIndex: idx };
   }
   return null;
 }
 
-function findShortTime(rowText: string): { timeStr: string; totalSeconds: number } | null {
+function findShortTime(rowText: string): { timeStr: string; totalSeconds: number; matchIndex: number } | null {
   // 1分未満のレース（例:「59．4」）は「分：秒」ではなく「秒．コンマ」の表記になる。
   // 斤量の小数（例:「55．5」）と紛らわしいため、妥当な秒数(40〜75秒)の範囲でのみ採用する。
   const re = /(\d{2})[．.](\d)(?!\d)/g;
@@ -337,7 +450,7 @@ function findShortTime(rowText: string): { timeStr: string; totalSeconds: number
     const tenths = parseInt(m[2], 10);
     const totalSeconds = seconds + tenths / 10;
     if (totalSeconds >= 40 && totalSeconds <= 75) {
-      return { timeStr: `0:${m[1]}.${m[2]}`, totalSeconds };
+      return { timeStr: `0:${m[1]}.${m[2]}`, totalSeconds, matchIndex: m.index };
     }
   }
   return null;

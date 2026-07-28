@@ -1,0 +1,1367 @@
+[
+  {
+    "id": "05339",
+    "name": "Ｃ．ルメール",
+    "wins": 140,
+    "winRate": 26.9,
+    "placeRate": 48.2
+  },
+  {
+    "id": "05386",
+    "name": "戸崎圭太",
+    "wins": 132,
+    "winRate": 16.4,
+    "placeRate": 32.2
+  },
+  {
+    "id": "01126",
+    "name": "松山弘平",
+    "wins": 128,
+    "winRate": 15.3,
+    "placeRate": 27.2
+  },
+  {
+    "id": "01170",
+    "name": "横山武史",
+    "wins": 110,
+    "winRate": 14.2,
+    "placeRate": 26.4
+  },
+  {
+    "id": "01163",
+    "name": "坂井瑠星",
+    "wins": 110,
+    "winRate": 15.9,
+    "placeRate": 27.4
+  },
+  {
+    "id": "01088",
+    "name": "川田将雅",
+    "wins": 105,
+    "winRate": 20.7,
+    "placeRate": 41
+  },
+  {
+    "id": "01091",
+    "name": "丹内祐次",
+    "wins": 95,
+    "winRate": 9.4,
+    "placeRate": 18.7
+  },
+  {
+    "id": "01174",
+    "name": "岩田望来",
+    "wins": 95,
+    "winRate": 14.2,
+    "placeRate": 23.2
+  },
+  {
+    "id": "01197",
+    "name": "佐々木大輔",
+    "wins": 81,
+    "winRate": 9.3,
+    "placeRate": 16.9
+  },
+  {
+    "id": "01140",
+    "name": "横山和生",
+    "wins": 77,
+    "winRate": 13.2,
+    "placeRate": 24
+  },
+  {
+    "id": "01213",
+    "name": "高杉吏麒",
+    "wins": 74,
+    "winRate": 8.8,
+    "placeRate": 17.3
+  },
+  {
+    "id": "01102",
+    "name": "北村友一",
+    "wins": 73,
+    "winRate": 12.3,
+    "placeRate": 23.2
+  },
+  {
+    "id": "00666",
+    "name": "武豊",
+    "wins": 72,
+    "winRate": 12.5,
+    "placeRate": 25.2
+  },
+  {
+    "id": "01180",
+    "name": "団野大成",
+    "wins": 68,
+    "winRate": 9.4,
+    "placeRate": 19.1
+  },
+  {
+    "id": "01157",
+    "name": "鮫島克駿",
+    "wins": 67,
+    "winRate": 8.5,
+    "placeRate": 17.3
+  },
+  {
+    "id": "01216",
+    "name": "吉村誠之助",
+    "wins": 66,
+    "winRate": 7.4,
+    "placeRate": 14.4
+  },
+  {
+    "id": "01179",
+    "name": "菅原明良",
+    "wins": 63,
+    "winRate": 8.7,
+    "placeRate": 16.1
+  },
+  {
+    "id": "01160",
+    "name": "荻野極",
+    "wins": 62,
+    "winRate": 9.8,
+    "placeRate": 18.7
+  },
+  {
+    "id": "01122",
+    "name": "三浦皇成",
+    "wins": 53,
+    "winRate": 9.4,
+    "placeRate": 22.1
+  },
+  {
+    "id": "01092",
+    "name": "津村明秀",
+    "wins": 51,
+    "winRate": 7.7,
+    "placeRate": 16.6
+  },
+  {
+    "id": "01171",
+    "name": "西村淳也",
+    "wins": 49,
+    "winRate": 10.7,
+    "placeRate": 21.5
+  },
+  {
+    "id": "01093",
+    "name": "藤岡佑介",
+    "wins": 49,
+    "winRate": 13.6,
+    "placeRate": 24.2
+  },
+  {
+    "id": "05203",
+    "name": "岩田康誠",
+    "wins": 43,
+    "winRate": 8.6,
+    "placeRate": 17.3
+  },
+  {
+    "id": "00660",
+    "name": "横山典弘",
+    "wins": 41,
+    "winRate": 13.1,
+    "placeRate": 22.7
+  },
+  {
+    "id": "00732",
+    "name": "幸英明",
+    "wins": 40,
+    "winRate": 6.9,
+    "placeRate": 13.5
+  },
+  {
+    "id": "01178",
+    "name": "斎藤新",
+    "wins": 38,
+    "winRate": 6.1,
+    "placeRate": 13
+  },
+  {
+    "id": "05585",
+    "name": "Ｄ．レーン",
+    "wins": 38,
+    "winRate": 23.6,
+    "placeRate": 38.5
+  },
+  {
+    "id": "01206",
+    "name": "小林美駒",
+    "wins": 37,
+    "winRate": 8.2,
+    "placeRate": 16.2
+  },
+  {
+    "id": "01032",
+    "name": "池添謙一",
+    "wins": 37,
+    "winRate": 9.2,
+    "placeRate": 17.5
+  },
+  {
+    "id": "05473",
+    "name": "Ｃ．デムーロ",
+    "wins": 37,
+    "winRate": 23.1,
+    "placeRate": 40
+  },
+  {
+    "id": "01208",
+    "name": "田口貫太",
+    "wins": 36,
+    "winRate": 4.6,
+    "placeRate": 12
+  },
+  {
+    "id": "01096",
+    "name": "大野拓弥",
+    "wins": 35,
+    "winRate": 6.6,
+    "placeRate": 12
+  },
+  {
+    "id": "05509",
+    "name": "Ｊ．モレイラ",
+    "wins": 35,
+    "winRate": 31.8,
+    "placeRate": 50.9
+  },
+  {
+    "id": "01127",
+    "name": "丸山元気",
+    "wins": 33,
+    "winRate": 6.5,
+    "placeRate": 17
+  },
+  {
+    "id": "01115",
+    "name": "浜中俊",
+    "wins": 33,
+    "winRate": 9.5,
+    "placeRate": 19.3
+  },
+  {
+    "id": "01185",
+    "name": "小沢大仁",
+    "wins": 32,
+    "winRate": 5,
+    "placeRate": 10.4
+  },
+  {
+    "id": "01161",
+    "name": "菊沢一樹",
+    "wins": 29,
+    "winRate": 3.9,
+    "placeRate": 8
+  },
+  {
+    "id": "01150",
+    "name": "石川裕紀人",
+    "wins": 28,
+    "winRate": 5.9,
+    "placeRate": 13.1
+  },
+  {
+    "id": "05643",
+    "name": "Ｒ．キング",
+    "wins": 28,
+    "winRate": 14,
+    "placeRate": 23.5
+  },
+  {
+    "id": "01015",
+    "name": "古川吉洋",
+    "wins": 27,
+    "winRate": 5.6,
+    "placeRate": 11.2
+  },
+  {
+    "id": "01192",
+    "name": "横山琉人",
+    "wins": 27,
+    "winRate": 5.3,
+    "placeRate": 10.3
+  },
+  {
+    "id": "01162",
+    "name": "木幡巧也",
+    "wins": 26,
+    "winRate": 3.8,
+    "placeRate": 8.1
+  },
+  {
+    "id": "01154",
+    "name": "松若風馬",
+    "wins": 24,
+    "winRate": 4.6,
+    "placeRate": 11
+  },
+  {
+    "id": "01075",
+    "name": "田辺裕信",
+    "wins": 24,
+    "winRate": 8.2,
+    "placeRate": 15.8
+  },
+  {
+    "id": "01191",
+    "name": "松本大輝",
+    "wins": 24,
+    "winRate": 6.9,
+    "placeRate": 11.2
+  },
+  {
+    "id": "01200",
+    "name": "西塚洸二",
+    "wins": 23,
+    "winRate": 5.8,
+    "placeRate": 12.6
+  },
+  {
+    "id": "01144",
+    "name": "菱田裕二",
+    "wins": 23,
+    "winRate": 4.3,
+    "placeRate": 9.2
+  },
+  {
+    "id": "01214",
+    "name": "長浜鴻緒",
+    "wins": 22,
+    "winRate": 4.6,
+    "placeRate": 10.4
+  },
+  {
+    "id": "01193",
+    "name": "今村聖奈",
+    "wins": 22,
+    "winRate": 6.4,
+    "placeRate": 11.7
+  },
+  {
+    "id": "00422",
+    "name": "内田博幸",
+    "wins": 21,
+    "winRate": 3.6,
+    "placeRate": 8.7
+  },
+  {
+    "id": "01184",
+    "name": "原優介",
+    "wins": 21,
+    "winRate": 3.2,
+    "placeRate": 6.7
+  },
+  {
+    "id": "01077",
+    "name": "石橋脩",
+    "wins": 21,
+    "winRate": 5.4,
+    "placeRate": 11.2
+  },
+  {
+    "id": "01046",
+    "name": "高田潤",
+    "wins": 20,
+    "winRate": 28.2,
+    "placeRate": 42.3
+  },
+  {
+    "id": "01018",
+    "name": "和田竜二",
+    "wins": 19,
+    "winRate": 3.7,
+    "placeRate": 10.5
+  },
+  {
+    "id": "05626",
+    "name": "Ｔ．マーカンド",
+    "wins": 19,
+    "winRate": 12.5,
+    "placeRate": 26.3
+  },
+  {
+    "id": "01221",
+    "name": "舟山瑠泉",
+    "wins": 19,
+    "winRate": 5.6,
+    "placeRate": 11.5
+  },
+  {
+    "id": "01135",
+    "name": "杉原誠人",
+    "wins": 19,
+    "winRate": 4.6,
+    "placeRate": 8.8
+  },
+  {
+    "id": "01187",
+    "name": "永島まなみ",
+    "wins": 19,
+    "winRate": 4.1,
+    "placeRate": 7.3
+  },
+  {
+    "id": "01186",
+    "name": "角田大和",
+    "wins": 18,
+    "winRate": 4.7,
+    "placeRate": 10.9
+  },
+  {
+    "id": "00733",
+    "name": "吉田豊",
+    "wins": 18,
+    "winRate": 4.2,
+    "placeRate": 9.1
+  },
+  {
+    "id": "01209",
+    "name": "石神深道",
+    "wins": 18,
+    "winRate": 3.9,
+    "placeRate": 8.4
+  },
+  {
+    "id": "01176",
+    "name": "亀田温心",
+    "wins": 18,
+    "winRate": 6.4,
+    "placeRate": 11
+  },
+  {
+    "id": "01124",
+    "name": "国分恭介",
+    "wins": 16,
+    "winRate": 5.8,
+    "placeRate": 16.8
+  },
+  {
+    "id": "01152",
+    "name": "小崎綾也",
+    "wins": 16,
+    "winRate": 4.6,
+    "placeRate": 9.5
+  },
+  {
+    "id": "01169",
+    "name": "武藤雅",
+    "wins": 16,
+    "winRate": 4.7,
+    "placeRate": 8.7
+  },
+  {
+    "id": "05678",
+    "name": "Ａ．プーシャン",
+    "wins": 16,
+    "winRate": 13.3,
+    "placeRate": 25
+  },
+  {
+    "id": "01220",
+    "name": "田山旺佑",
+    "wins": 16,
+    "winRate": 4.6,
+    "placeRate": 7.5
+  },
+  {
+    "id": "01190",
+    "name": "古川奈穂",
+    "wins": 14,
+    "winRate": 4.6,
+    "placeRate": 11.5
+  },
+  {
+    "id": "01034",
+    "name": "酒井学",
+    "wins": 14,
+    "winRate": 3.4,
+    "placeRate": 7
+  },
+  {
+    "id": "05212",
+    "name": "Ｍ．デムーロ",
+    "wins": 14,
+    "winRate": 5.6,
+    "placeRate": 11.1
+  },
+  {
+    "id": "01203",
+    "name": "石田拓郎",
+    "wins": 14,
+    "winRate": 3.7,
+    "placeRate": 6.4
+  },
+  {
+    "id": "01168",
+    "name": "富田暁",
+    "wins": 13,
+    "winRate": 5.3,
+    "placeRate": 12.2
+  },
+  {
+    "id": "01095",
+    "name": "吉田隼人",
+    "wins": 12,
+    "winRate": 3.9,
+    "placeRate": 11
+  },
+  {
+    "id": "01196",
+    "name": "小牧加矢太",
+    "wins": 12,
+    "winRate": 12.4,
+    "placeRate": 30.9
+  },
+  {
+    "id": "01117",
+    "name": "丸田恭介",
+    "wins": 12,
+    "winRate": 3.1,
+    "placeRate": 7.1
+  },
+  {
+    "id": "01202",
+    "name": "鷲頭虎太",
+    "wins": 12,
+    "winRate": 4.6,
+    "placeRate": 10.7
+  },
+  {
+    "id": "01043",
+    "name": "北村宏司",
+    "wins": 12,
+    "winRate": 4,
+    "placeRate": 8.4
+  },
+  {
+    "id": "05644",
+    "name": "Ａ．バデル",
+    "wins": 12,
+    "winRate": 17.4,
+    "placeRate": 26.1
+  },
+  {
+    "id": "01181",
+    "name": "秋山稔樹",
+    "wins": 11,
+    "winRate": 3.2,
+    "placeRate": 8.5
+  },
+  {
+    "id": "01223",
+    "name": "和田陽希",
+    "wins": 11,
+    "winRate": 3.3,
+    "placeRate": 6.1
+  },
+  {
+    "id": "01087",
+    "name": "上野翔",
+    "wins": 11,
+    "winRate": 9.9,
+    "placeRate": 17.1
+  },
+  {
+    "id": "01085",
+    "name": "松岡正海",
+    "wins": 10,
+    "winRate": 2.3,
+    "placeRate": 7.6
+  },
+  {
+    "id": "01212",
+    "name": "柴田裕一郎",
+    "wins": 10,
+    "winRate": 2.7,
+    "placeRate": 7.3
+  },
+  {
+    "id": "01217",
+    "name": "上里直汰",
+    "wins": 10,
+    "winRate": 4.5,
+    "placeRate": 7.1
+  },
+  {
+    "id": "01142",
+    "name": "長岡禎仁",
+    "wins": 9,
+    "winRate": 3.2,
+    "placeRate": 7.9
+  },
+  {
+    "id": "05115",
+    "name": "Ａ．シュタルケ",
+    "wins": 9,
+    "winRate": 6.1,
+    "placeRate": 14.2
+  },
+  {
+    "id": "01113",
+    "name": "草野太郎",
+    "wins": 9,
+    "winRate": 9.9,
+    "placeRate": 23.1
+  },
+  {
+    "id": "01130",
+    "name": "高倉稜",
+    "wins": 8,
+    "winRate": 4.5,
+    "placeRate": 9.6
+  },
+  {
+    "id": "01139",
+    "name": "森一馬",
+    "wins": 8,
+    "winRate": 10.8,
+    "placeRate": 21.6
+  },
+  {
+    "id": "01149",
+    "name": "伴啓太",
+    "wins": 8,
+    "winRate": 8.9,
+    "placeRate": 16.7
+  },
+  {
+    "id": "01009",
+    "name": "柴田大知",
+    "wins": 7,
+    "winRate": 1.9,
+    "placeRate": 5.7
+  },
+  {
+    "id": "01138",
+    "name": "藤懸貴志",
+    "wins": 7,
+    "winRate": 2.4,
+    "placeRate": 6.9
+  },
+  {
+    "id": "01141",
+    "name": "中井裕二",
+    "wins": 7,
+    "winRate": 3,
+    "placeRate": 7.8
+  },
+  {
+    "id": "01125",
+    "name": "国分優作",
+    "wins": 7,
+    "winRate": 2.6,
+    "placeRate": 6.3
+  },
+  {
+    "id": "01166",
+    "name": "川又賢治",
+    "wins": 7,
+    "winRate": 3.3,
+    "placeRate": 7.5
+  },
+  {
+    "id": "01066",
+    "name": "難波剛健",
+    "wins": 7,
+    "winRate": 9.1,
+    "placeRate": 15.6
+  },
+  {
+    "id": "01059",
+    "name": "石神深一",
+    "wins": 7,
+    "winRate": 7.1,
+    "placeRate": 10.1
+  },
+  {
+    "id": "01037",
+    "name": "太宰啓介",
+    "wins": 6,
+    "winRate": 2.8,
+    "placeRate": 8.5
+  },
+  {
+    "id": "01069",
+    "name": "五十嵐雄祐",
+    "wins": 6,
+    "winRate": 8.6,
+    "placeRate": 21.4
+  },
+  {
+    "id": "01134",
+    "name": "嶋田純次",
+    "wins": 6,
+    "winRate": 2.7,
+    "placeRate": 6.3
+  },
+  {
+    "id": "01222",
+    "name": "森田誠也",
+    "wins": 6,
+    "winRate": 2.6,
+    "placeRate": 5.7
+  },
+  {
+    "id": "01120",
+    "name": "大江原圭",
+    "wins": 6,
+    "winRate": 6.3,
+    "placeRate": 12.6
+  },
+  {
+    "id": "01123",
+    "name": "小野寺祐太",
+    "wins": 6,
+    "winRate": 6.5,
+    "placeRate": 13
+  },
+  {
+    "id": "01182",
+    "name": "泉谷楓真",
+    "wins": 6,
+    "winRate": 4.8,
+    "placeRate": 6.4
+  },
+  {
+    "id": "01109",
+    "name": "黛弘人",
+    "wins": 5,
+    "winRate": 1.5,
+    "placeRate": 6.3
+  },
+  {
+    "id": "05674",
+    "name": "Ｍ．ディー",
+    "wins": 5,
+    "winRate": 3.8,
+    "placeRate": 11.5
+  },
+  {
+    "id": "01158",
+    "name": "野中悠太郎",
+    "wins": 5,
+    "winRate": 1.6,
+    "placeRate": 3.9
+  },
+  {
+    "id": "01183",
+    "name": "小林脩斗",
+    "wins": 5,
+    "winRate": 2.2,
+    "placeRate": 5.2
+  },
+  {
+    "id": "01112",
+    "name": "荻野琢真",
+    "wins": 5,
+    "winRate": 2.5,
+    "placeRate": 5.4
+  },
+  {
+    "id": "01143",
+    "name": "原田和真",
+    "wins": 5,
+    "winRate": 2.6,
+    "placeRate": 5.3
+  },
+  {
+    "id": "01218",
+    "name": "遠藤汰月",
+    "wins": 5,
+    "winRate": 1.6,
+    "placeRate": 2.9
+  },
+  {
+    "id": "01211",
+    "name": "坂口智康",
+    "wins": 5,
+    "winRate": 10.2,
+    "placeRate": 18.4
+  },
+  {
+    "id": "01128",
+    "name": "川須栄彦",
+    "wins": 4,
+    "winRate": 1.7,
+    "placeRate": 5.7
+  },
+  {
+    "id": "01207",
+    "name": "佐藤翔馬",
+    "wins": 4,
+    "winRate": 1.7,
+    "placeRate": 4.7
+  },
+  {
+    "id": "01204",
+    "name": "河原田菜々",
+    "wins": 4,
+    "winRate": 1.5,
+    "placeRate": 3.6
+  },
+  {
+    "id": "05659",
+    "name": "Ａ．ルメートル",
+    "wins": 4,
+    "winRate": 4.1,
+    "placeRate": 10.2
+  },
+  {
+    "id": "01201",
+    "name": "水沼元輝",
+    "wins": 4,
+    "winRate": 2,
+    "placeRate": 3.5
+  },
+  {
+    "id": "01177",
+    "name": "小林凌大",
+    "wins": 4,
+    "winRate": 2.9,
+    "placeRate": 5
+  },
+  {
+    "id": "01114",
+    "name": "田中健",
+    "wins": 4,
+    "winRate": 6.5,
+    "placeRate": 8.1
+  },
+  {
+    "id": "00689",
+    "name": "江田照男",
+    "wins": 3,
+    "winRate": 1,
+    "placeRate": 5.2
+  },
+  {
+    "id": "01195",
+    "name": "川端海翼",
+    "wins": 3,
+    "winRate": 1.2,
+    "placeRate": 5.1
+  },
+  {
+    "id": "01153",
+    "name": "木幡初也",
+    "wins": 3,
+    "winRate": 1.9,
+    "placeRate": 7.5
+  },
+  {
+    "id": "01063",
+    "name": "小坂忠士",
+    "wins": 3,
+    "winRate": 9.4,
+    "placeRate": 28.1
+  },
+  {
+    "id": "01156",
+    "name": "加藤祥太",
+    "wins": 3,
+    "winRate": 3.5,
+    "placeRate": 9.3
+  },
+  {
+    "id": "00641",
+    "name": "柴田善臣",
+    "wins": 3,
+    "winRate": 4.5,
+    "placeRate": 7.5
+  },
+  {
+    "id": "05504",
+    "name": "Ｍ．バルザローナ",
+    "wins": 3,
+    "winRate": 27.3,
+    "placeRate": 45.5
+  },
+  {
+    "id": "01119",
+    "name": "伊藤工真",
+    "wins": 3,
+    "winRate": 4.8,
+    "placeRate": 6.5
+  },
+  {
+    "id": "05680",
+    "name": "Ｆ．ジェルー",
+    "wins": 2,
+    "winRate": 3.4,
+    "placeRate": 13.6
+  },
+  {
+    "id": "01101",
+    "name": "中村将之",
+    "wins": 2,
+    "winRate": 4.4,
+    "placeRate": 13.3
+  },
+  {
+    "id": "01215",
+    "name": "橋木太希",
+    "wins": 2,
+    "winRate": 1.1,
+    "placeRate": 2.8
+  },
+  {
+    "id": "01133",
+    "name": "水口優也",
+    "wins": 2,
+    "winRate": 2.4,
+    "placeRate": 5.9
+  },
+  {
+    "id": "05625",
+    "name": "Ｈ．ドイル",
+    "wins": 2,
+    "winRate": 8.3,
+    "placeRate": 16.7
+  },
+  {
+    "id": "05416",
+    "name": "Ｃ．ウィリアムズ",
+    "wins": 2,
+    "winRate": 16.7,
+    "placeRate": 25
+  },
+  {
+    "id": "05676",
+    "name": "Ｔ．ハマーハンセン",
+    "wins": 2,
+    "winRate": 40,
+    "placeRate": 40
+  },
+  {
+    "id": "01099",
+    "name": "鮫島良太",
+    "wins": 1,
+    "winRate": 1,
+    "placeRate": 9.7
+  },
+  {
+    "id": "01147",
+    "name": "城戸義政",
+    "wins": 1,
+    "winRate": 0.9,
+    "placeRate": 4.3
+  },
+  {
+    "id": "01005",
+    "name": "西谷誠",
+    "wins": 1,
+    "winRate": 4.3,
+    "placeRate": 17.4
+  },
+  {
+    "id": "01151",
+    "name": "井上敏樹",
+    "wins": 1,
+    "winRate": 1.8,
+    "placeRate": 5.3
+  },
+  {
+    "id": "01052",
+    "name": "金子光希",
+    "wins": 1,
+    "winRate": 3,
+    "placeRate": 9.1
+  },
+  {
+    "id": "01131",
+    "name": "西村太一",
+    "wins": 1,
+    "winRate": 3.6,
+    "placeRate": 10.7
+  },
+  {
+    "id": "05675",
+    "name": "Ｆ．ゴンサルベス",
+    "wins": 1,
+    "winRate": 11.1,
+    "placeRate": 33.3
+  },
+  {
+    "id": "01072",
+    "name": "黒岩悠",
+    "wins": 1,
+    "winRate": 1.3,
+    "placeRate": 2.6
+  },
+  {
+    "id": "01129",
+    "name": "菅原隆一",
+    "wins": 1,
+    "winRate": 1.4,
+    "placeRate": 2.9
+  },
+  {
+    "id": "01194",
+    "name": "大久保友雅",
+    "wins": 1,
+    "winRate": 3.8,
+    "placeRate": 7.7
+  },
+  {
+    "id": "05443",
+    "name": "本田正重",
+    "wins": 1,
+    "winRate": 7.1,
+    "placeRate": 14.3
+  },
+  {
+    "id": "05578",
+    "name": "落合玄太",
+    "wins": 1,
+    "winRate": 6.2,
+    "placeRate": 6.2
+  },
+  {
+    "id": "05380",
+    "name": "矢野貴之",
+    "wins": 1,
+    "winRate": 10,
+    "placeRate": 10
+  },
+  {
+    "id": "01108",
+    "name": "的場勇人",
+    "wins": 1,
+    "winRate": 1.7,
+    "placeRate": 1.7
+  },
+  {
+    "id": "01105",
+    "name": "田村太雅",
+    "wins": 1,
+    "winRate": 4.5,
+    "placeRate": 4.5
+  },
+  {
+    "id": "05534",
+    "name": "石川倭",
+    "wins": 1,
+    "winRate": 5.3,
+    "placeRate": 5.3
+  },
+  {
+    "id": "05669",
+    "name": "塩津璃菜",
+    "wins": 1,
+    "winRate": 50,
+    "placeRate": 50
+  },
+  {
+    "id": "01167",
+    "name": "木幡育也",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 4
+  },
+  {
+    "id": "01219",
+    "name": "谷原柚希",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 4.5
+  },
+  {
+    "id": "00726",
+    "name": "岩部純二",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 2.1
+  },
+  {
+    "id": "01198",
+    "name": "土田真翔",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 1.1
+  },
+  {
+    "id": "01165",
+    "name": "森裕太朗",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 25
+  },
+  {
+    "id": "05662",
+    "name": "Ｋ．リョン",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 33.3
+  },
+  {
+    "id": "05683",
+    "name": "佐野遥久",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 50
+  },
+  {
+    "id": "05558",
+    "name": "渡辺竜也",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "01023",
+    "name": "江田勇亮",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "01118",
+    "name": "宮崎北斗",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05533",
+    "name": "Ｋ．ティータン",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05639",
+    "name": "広瀬航",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05524",
+    "name": "笹川翼",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05429",
+    "name": "岡田祥嗣",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "01146",
+    "name": "和田翼",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05390",
+    "name": "吉村智洋",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05286",
+    "name": "服部茂史",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05411",
+    "name": "桑村真明",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05053",
+    "name": "丸野勝虎",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05557",
+    "name": "加藤聡一",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05592",
+    "name": "小野楓馬",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05673",
+    "name": "山林堂信彦",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05677",
+    "name": "Ｃ．トーレス",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05445",
+    "name": "山本聡哉",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05571",
+    "name": "菅原辰徳",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05595",
+    "name": "福原杏",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05598",
+    "name": "山中悠希",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05684",
+    "name": "松本一心",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05404",
+    "name": "御神本訓史",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05545",
+    "name": "山本咲希到",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05613",
+    "name": "神尾香澄",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05650",
+    "name": "谷内貫太",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05658",
+    "name": "青海大樹",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05667",
+    "name": "土方颯太",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05682",
+    "name": "山本大翔",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "00815",
+    "name": "川原正一",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05446",
+    "name": "Ｍ．ザーラ",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05492",
+    "name": "阿部龍",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05567",
+    "name": "大柿一真",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05597",
+    "name": "鴨宮祥行",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05601",
+    "name": "金山昇馬",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05654",
+    "name": "山田義貴",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05679",
+    "name": "松戸政也",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  {
+    "id": "05681",
+    "name": "永井孝典",
+    "wins": 0,
+    "winRate": 0,
+    "placeRate": 0
+  }
+]

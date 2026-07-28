@@ -134,6 +134,10 @@ interface RaceFactRecord {
   timeStr: string;
   totalSeconds: number;
   odds: number | null;
+  jockeyName: string | null;
+  weight: number | null;
+  bodyWeight: number | null;
+  bodyWeightChange: number | null;
 }
 
 function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
@@ -161,6 +165,10 @@ function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
         timeStr: horse.timeStr,
         totalSeconds: horse.totalSeconds,
         odds: horse.odds,
+        jockeyName: horse.jockeyName,
+        weight: horse.weight,
+        bodyWeight: horse.bodyWeight,
+        bodyWeightChange: horse.bodyWeightChange,
       });
     }
   }
@@ -287,6 +295,10 @@ async function main(): Promise<void> {
   console.log(`馬場状態が読めず除外: ${diagnostics.skippedNoCondition}`);
   console.log(`出走馬が1頭も抽出できず除外: ${diagnostics.skippedNoHorses}`);
   console.log(`頭数表記と抽出数の不一致: ${diagnostics.horseCountMismatch}`);
+  const jockeyMatchRate = diagnostics.totalHorseRows > 0
+    ? ((1 - diagnostics.jockeyNotMatched / diagnostics.totalHorseRows) * 100).toFixed(1)
+    : 'N/A';
+  console.log(`騎手名簿と一致せず: ${diagnostics.jockeyNotMatched} / ${diagnostics.totalHorseRows}頭（一致率 ${jockeyMatchRate}%）`);
 }
 
 main().catch(e => {
