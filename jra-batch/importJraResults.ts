@@ -148,14 +148,38 @@ interface RaceFactRecord {
   weight: number | null;
   bodyWeight: number | null;
   bodyWeightChange: number | null;
+  waku: number | null;
+  umaban: number | null;
+  // 最初に追跡されたコーナーでの位置取り。同着はグループ内にまとめられているため、
+  // 「何番目のグループにいたか（1始まり）」と「そのコーナーの総グループ数」を持たせる
+  // （0=先頭グループ寄り、1=最後方グループ寄りの位置取り度合いは
+  //  (earlyPositionGroup-1)/(earlyPositionGroupTotal-1) で求められる）。
+  // コーナー通過順位が取得できなかったレース（障害・データ整合エラー等）ではnull。
+  earlyPositionGroup: number | null;
+  earlyPositionGroupTotal: number | null;
+}
+
+// 最初に追跡されたコーナー（cornerPositions[0]、コーナー番号の昇順で格納されている）での
+// 馬番ごとの「グループ番号(1始まり)」を引けるようにする。
+function buildEarlyPositionLookup(race: ParsedRaceResult): Map<number, number> {
+  const lookup = new Map<number, number>();
+  const firstCorner = race.cornerPositions[0];
+  if (!firstCorner) return lookup;
+  firstCorner.order.forEach((group, groupIndex) => {
+    for (const umaban of group) lookup.set(umaban, groupIndex + 1);
+  });
+  return lookup;
 }
 
 function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
   const records: RaceFactRecord[] = [];
   for (const race of races) {
     if (race.distance <= 0 || race.condition === '不明') continue;
+    const earlyPositionLookup = buildEarlyPositionLookup(race);
+    const earlyPositionGroupTotal = race.cornerPositions[0]?.order.length ?? null;
     for (const horse of race.horses) {
       if (horse.totalSeconds <= 0) continue;
+      const earlyPositionGroup = horse.umaban != null ? earlyPositionLookup.get(horse.umaban) ?? null : null;
       records.push({
         year: race.year,
         kaisai: race.kaisai,
@@ -186,6 +210,10 @@ function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
         weight: horse.weight,
         bodyWeight: horse.bodyWeight,
         bodyWeightChange: horse.bodyWeightChange,
+        waku: horse.waku,
+        umaban: horse.umaban,
+        earlyPositionGroup,
+        earlyPositionGroupTotal,
       });
     }
   }
@@ -316,6 +344,10 @@ async function main(): Promise<void> {
     ? ((1 - diagnostics.jockeyNotMatched / diagnostics.totalHorseRows) * 100).toFixed(1)
     : 'N/A';
   console.log(`騎手名簿と一致せず: ${diagnostics.jockeyNotMatched} / ${diagnostics.totalHorseRows}頭（一致率 ${jockeyMatchRate}%）`);
+  const cornerOkRate = diagnostics.totalRacesForCorner > 0
+    ? ((1 - (diagnostics.cornerNoHeader + diagnostics.cornerCountMismatch) / diagnostics.totalRacesForCorner) * 100).toFixed(1)
+    : 'N/A';
+  console.log(`コーナー通過順位: 見出しなし ${diagnostics.cornerNoHeader} / 頭数不整合 ${diagnostics.cornerCountMismatch} / 対象 ${diagnostics.totalRacesForCorner}レース（取得率 ${cornerOkRate}%）`);
 }
 
 main().catch(e => {

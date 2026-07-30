@@ -82,6 +82,11 @@ function findJockeyName(rowText: string, searchStart: number): string | null {
 export interface ParsedHorseResult {
   name: string;
   finishRank: number; // 着順（タイム不明で除外された馬は含めない中での順位）
+  // 枠番（1〜8）。名前マッチ直前の数字列の先頭1桁から取得（枠番は必ず1桁のため
+  // 区切り文字が無くても一意に分解できる）。
+  waku: number | null;
+  // 馬番。同じ数字列の残り1〜2桁。
+  umaban: number | null;
   timeStr: string;
   totalSeconds: number;
   // 単勝オッズ。行内の「タイム→着差→単勝オッズ」という並びのうち、
@@ -127,7 +132,17 @@ export interface ParsedRaceResult {
   // JRAの払戻金セクションの掲載順そのまま。枠連は枠番の組み合わせが必要なため
   // （枠番は本パーサーでは未抽出）、配当額のみ保持し馬番系の的中判定には使わない。
   payouts: PayoutData;
+  // コーナーごとの通過順位（先頭〜後方の馬番グループ列。同着はグループ内にまとめる）。
+  // 障害レース（コーナー通過順位の見出しが無い）や見出しの整合性チェックに失敗した
+  // レースでは空配列。
+  cornerPositions: CornerPosition[];
   horses: ParsedHorseResult[];
+}
+
+export interface CornerPosition {
+  corner: number;
+  // 先頭(1着相当)から後方へ向けての馬番グループ列。同着（同じ塊）はグループ内にまとめる。
+  order: number[][];
 }
 
 export interface PayoutData {
@@ -204,6 +219,148 @@ function extractPayouts(block: string): PayoutData {
   return result;
 }
 
+// コーナー通過順位のパース。
+//
+// 「通過コーナー順 X→Y→…」の見出しの矢印の個数だけを使い、実際に追跡されている
+// コーナー番号は「1,2,3,4の末尾N個」と推定する（丸数字グリフがフォント変換で
+// 稀に文字化けするため、見出し中の数字そのものは信用しない。ラベル行の中身も
+// 同じ理由で読まず、「1文字だけの行」という長さだけで判定する）。
+//
+// 実データで確認できたレイアウト（生テキストを目視確認して確定）:
+//   - 追跡コーナーは奇数(1,3)グループと偶数(2,4)グループに分かれて表示される。
+//   - 各グループの要素数が2の場合: ラベル行が2つ連続し、その後にデータ行が2つ連続する
+//     （1行目のデータが1つ目のラベルに、2行目のデータが2つ目のラベルに対応）。
+//   - 要素数が1のグループが2つ連続する場合（＝追跡コーナーが2つだけの「3→4」等）:
+//     「ラベル データ ラベル データ」が1行に同居する。データの区切りは出走頭数
+//     （馬番参照がちょうどheadCount個集まった時点）で判定する。
+//   - 要素数1のグループの次が要素数2のグループの場合（「2→3→4」等）:
+//     要素数1の方は単独で「ラベル データ」が1行に収まる。
+function inferTrackedCorners(headerBody: string): number[] {
+  const tokenCount = (headerBody.match(/→/g)?.length ?? 0) + 1;
+  return [1, 2, 3, 4].slice(4 - tokenCount);
+}
+function groupsFromCorners(corners: number[]): number[][] {
+  const odd = corners.filter(c => c % 2 === 1);
+  const even = corners.filter(c => c % 2 === 0);
+  return [odd, even].filter(g => g.length > 0);
+}
+interface CountToken { count: number; end: number; }
+function tokenizeCountsFrom(text: string): CountToken[] {
+  const re = /（[\d，]+）|\d+/g;
+  const tokens: CountToken[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const isGroup = m[0].startsWith('（');
+    const count = isGroup ? (m[0].match(/\d+/g) || []).length : 1;
+    tokens.push({ count, end: m.index + m[0].length });
+  }
+  return tokens;
+}
+function stripLeadingLabel(text: string): string {
+  return text.replace(/^\s*\S\s*/, '');
+}
+// 「ラベル データ ラベル データ」が1行に同居するケースの分割。
+function splitCombinedCornerLine(line: string, headCount: number): string[] {
+  const segments: string[] = [];
+  let remaining = stripLeadingLabel(line);
+  for (let seg = 0; seg < 2; seg++) {
+    if (seg > 0) remaining = stripLeadingLabel(remaining);
+    const tokens = tokenizeCountsFrom(remaining);
+    let tokenIdx = 0, count = 0;
+    while (tokenIdx < tokens.length && count < headCount) {
+      count += tokens[tokenIdx].count;
+      tokenIdx++;
+    }
+    const segEnd = tokenIdx > 0 ? tokens[tokenIdx - 1].end : 0;
+    segments.push(remaining.slice(0, segEnd).trim());
+    remaining = remaining.slice(segEnd);
+  }
+  return segments;
+}
+function parseCornerLines(lines: string[], groups: number[][], headCount: number): Map<number, string> {
+  const result = new Map<number, string>();
+  let cursor = 0;
+  for (let gi = 0; gi < groups.length; gi++) {
+    const group = groups[gi];
+    let labelLineCount = 0;
+    while (labelLineCount < group.length && cursor + labelLineCount < lines.length && lines[cursor + labelLineCount].length === 1) {
+      labelLineCount++;
+    }
+    if (labelLineCount === group.length) {
+      cursor += labelLineCount;
+      for (const corner of group) {
+        result.set(corner, (lines[cursor] ?? '').trim());
+        cursor++;
+      }
+    } else if (group.length === 1) {
+      const line = lines[cursor] ?? '';
+      const nextGroup = groups[gi + 1];
+      if (nextGroup && nextGroup.length === 1) {
+        const segments = splitCombinedCornerLine(line, headCount);
+        result.set(group[0], segments[0] ?? '');
+        result.set(nextGroup[0], segments[1] ?? '');
+        cursor++;
+        gi++; // 次のグループは同じ行で処理済み
+      } else {
+        result.set(group[0], stripLeadingLabel(line).trim());
+        cursor++;
+      }
+    }
+  }
+  return result;
+}
+function parseGroupString(dataStr: string): number[][] {
+  // 「（12，16）13（10，4，11）」のような文字列を、丸括弧の同着グループ・単独馬番の
+  // 配列（先頭から後方への順）に変換する。「－」「，」（グループ外）「＝」は区切りとして無視する。
+  const groups: number[][] = [];
+  const re = /（([\d，]+)）|(\d+)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(dataStr)) !== null) {
+    if (m[1]) groups.push(m[1].split('，').map(n => parseInt(n, 10)));
+    else if (m[2]) groups.push([parseInt(m[2], 10)]);
+  }
+  return groups;
+}
+
+/**
+ * レースブロック全体からコーナー通過順位を抽出する。見出しが無い（障害レース等）、
+ * または抽出結果の馬番集合が出走頭数と整合しない場合はnullを返し、診断カウンタに計上する。
+ */
+function extractCornerPositions(block: string, headCount: number, diagnostics?: ParseDiagnostics): CornerPosition[] {
+  if (diagnostics) diagnostics.totalRacesForCorner++;
+
+  const headerMatch = block.match(/「通過コーナー順\s*([^」]+)」/);
+  if (!headerMatch) {
+    if (diagnostics) diagnostics.cornerNoHeader++;
+    return [];
+  }
+  const corners = inferTrackedCorners(headerMatch[1]);
+  const groups = groupsFromCorners(corners);
+
+  const headerLineEnd = block.indexOf('\n', headerMatch.index! + headerMatch[0].length);
+  const rest = headerLineEnd >= 0 ? block.slice(headerLineEnd + 1) : '';
+  const endMatch = rest.match(/勝馬の|市場取引馬/);
+  const section = endMatch && endMatch.index != null ? rest.slice(0, endMatch.index) : rest.slice(0, 500);
+  const lines = section.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+  const dataByCorner = parseCornerLines(lines, groups, headCount);
+
+  const result: CornerPosition[] = [];
+  for (const corner of corners) {
+    const dataStr = dataByCorner.get(corner);
+    if (dataStr == null) { if (diagnostics) diagnostics.cornerCountMismatch++; return []; }
+    const order = parseGroupString(dataStr);
+    const horseCount = order.reduce((s, g) => s + g.length, 0);
+    const uniqueCount = new Set(order.flat()).size;
+    if (horseCount !== headCount || uniqueCount !== headCount) {
+      if (diagnostics) diagnostics.cornerCountMismatch++;
+      return [];
+    }
+    result.push({ corner, order });
+  }
+  return result;
+}
+
 /**
  * レースブロックが正規表現でうまく解釈できず捨てられた件数を集計する診断情報。
  * ヒューリスティックなパース処理のため、想定外のPDFレイアウトに当たると
@@ -222,6 +379,12 @@ export interface ParseDiagnostics {
   // 騎手名簿と一致しなかった出走馬の頭数（抽出成功率＝1-jockeyNotMatched/totalHorseRowsで確認する）。
   jockeyNotMatched: number;
   totalHorseRows: number;
+  // コーナー通過順位が見出しごと見つからなかった件数（障害レース等、そもそも掲載が無い）。
+  cornerNoHeader: number;
+  // 見出しはあったが、各コーナーで抽出した馬番の集合が出走頭数と整合しなかった件数
+  // （出走取消等での頭数差、まれな表記ゆれなど）。
+  cornerCountMismatch: number;
+  totalRacesForCorner: number;
 }
 
 export function createParseDiagnostics(): ParseDiagnostics {
@@ -235,6 +398,9 @@ export function createParseDiagnostics(): ParseDiagnostics {
     horseCountMismatch: 0,
     jockeyNotMatched: 0,
     totalHorseRows: 0,
+    cornerNoHeader: 0,
+    cornerCountMismatch: 0,
+    totalRacesForCorner: 0,
   };
 }
 
@@ -248,6 +414,9 @@ export function mergeDiagnostics(target: ParseDiagnostics, source: ParseDiagnost
   target.horseCountMismatch += source.horseCountMismatch;
   target.jockeyNotMatched += source.jockeyNotMatched;
   target.totalHorseRows += source.totalHorseRows;
+  target.cornerNoHeader += source.cornerNoHeader;
+  target.cornerCountMismatch += source.cornerCountMismatch;
+  target.totalRacesForCorner += source.totalRacesForCorner;
 }
 
 const CONDITION_WORDS = ['良', '稍重', '重', '不良'];
@@ -378,6 +547,11 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
         const expectedCount = parseInt(headCountMatch[1], 10);
         if (expectedCount !== horses.length) diagnostics.horseCountMismatch++;
       }
+      // コーナー通過順位は出走頭数との整合チェックが要るため、（N頭）表記の数値を使う
+      // （タイム不明で除外された馬がいるとhorses.lengthとは一致しないことがあるため）。
+      const cornerPositions = headCountMatch
+        ? extractCornerPositions(block, parseInt(headCountMatch[1], 10), diagnostics)
+        : [];
       results.push({
         year,
         kaisai,
@@ -393,6 +567,7 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
         referenceLast3F,
         quinellaPayout,
         payouts,
+        cornerPositions,
         horses,
       });
     } else if (diagnostics) {
@@ -420,6 +595,18 @@ function extractHorseTimes(section: string, diagnostics?: ParseDiagnostics): Par
   let lastTime: { timeStr: string; totalSeconds: number } | null = null;
 
   for (let i = 0; i < matches.length; i++) {
+    // 枠番・馬番：馬名マッチの直前にある数字列（例:「7 9」「811」）。枠番は必ず1桁(1〜8)
+    // なので、区切り文字の有無によらず「先頭1桁＝枠番、残り1〜2桁＝馬番」で一意に決まる。
+    // 直前の馬の行の末尾（オッズ等）と隣接して誤読しないよう、数字の直前が別の数字である
+    // 場合は対象外にする。
+    // 馬番の直後に、特記事項を示す記号（フォント変換で文字化けする）が挟まることがあり
+    // （例:「2 2 !」の「!」）、さらに行の折り返し（例:「714 "\n! ピコアーガイル」）で
+    // 改行や別の記号を挟むこともあるため、末尾の非数字は複数文字まで許容する。
+    const wakuUmabanWindow = section.slice(Math.max(0, matches[i].index - 18), matches[i].index);
+    const wakuUmabanMatch = wakuUmabanWindow.match(/(?<!\d)([1-8])\s*(\d{1,2})[^\d]{0,6}$/);
+    const waku = wakuUmabanMatch ? parseInt(wakuUmabanMatch[1], 10) : null;
+    const umaban = wakuUmabanMatch ? parseInt(wakuUmabanMatch[2], 10) : null;
+
     const start = matches[i].index;
     const end = i + 1 < matches.length ? matches[i + 1].index : section.length;
     const rowText = section.slice(start, end);
@@ -475,6 +662,8 @@ function extractHorseTimes(section: string, diagnostics?: ParseDiagnostics): Par
       horses.push({
         name: matches[i].name,
         finishRank: horses.length + 1,
+        waku,
+        umaban,
         timeStr: found.timeStr,
         totalSeconds: found.totalSeconds,
         jockeyName,
