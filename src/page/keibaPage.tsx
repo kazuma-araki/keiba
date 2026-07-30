@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import { parseCsvToHorses, scrapedHorsesToHorseData, scrapedHorsesToCsvText } from '../utils/horseParser';
 import { parseJraHtml } from '../utils/getInfo';
 import { LOW_CONFIDENCE_THRESHOLD } from '../utils/baseline';
-import { computeWeightedBaselineSpeedIndex, computeBlendedSpeedIndex } from '../utils/raceWeighting';
+import { computeWeightedBaselineSpeedIndex, computeBlendedSpeedIndex, computeDistanceIntervalZ } from '../utils/raceWeighting';
 import type { TodayRaceCondition } from '../utils/raceWeighting';
-import type { HorseData, PastRace } from '../type/keibaType';
+import type { HorseData } from '../type/keibaType';
 import './keibaPage.css';
 
 type SortKey = 'none' | 'deviation';
+
+function todayIsoDate(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+function isoToDateStr(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${y}年${m}月${d}日`;
+}
 
 export default function AnalyzerDashboard() {
   const [rawText, setRawText] = useState('');
@@ -17,6 +25,8 @@ export default function AnalyzerDashboard() {
   // 集計するために使う（ブラウザ内で完結する計算で、通信は発生しない）
   const [todayTrackType, setTodayTrackType] = useState<TodayRaceCondition['trackType']>('芝');
   const [todayDistance, setTodayDistance] = useState<number>(1600);
+  // 距離変更・間隔（休み明け/連闘）の判定に使う、対象レースの開催日
+  const [todayDateIso, setTodayDateIso] = useState<string>(todayIsoDate());
 
   const handleAnalyse = () => {
     const parsedData = parseCsvToHorses(rawText);
@@ -52,18 +62,9 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const getProcessedHorses = () => {
     if (!horses || horses.length === 0) return [];
 
+    const todayDateStr = isoToDateStr(todayDateIso);
+
     const horsesWithStats = horses.map(horse => {
-    const validRaces = horse.races.filter(
-        (r): r is PastRace => r !== null && r.secondsPerMeter > 0
-    );
-
-    // 失速傾向：有効な過去走のうち半数以上が失速判定なら「失速しやすい馬」とみなす
-    const slowFinishCount = validRaces.filter(r => r.isSlowFinish).length;
-    const isSlowFinisher = validRaces.length > 0 && slowFinishCount / validRaces.length >= 0.5;
-
-    const fastFinishCount = validRaces.filter(r => r.isFastFinish).length;
-    const isFastFinisher = validRaces.length > 0 && fastFinishCount / validRaces.length >= 0.5;
-
     // 基準タイム比較指数：過去走ごとのbaselineSpeedIndexを、新しさ×基準の
     // 信頼度（サンプル数）×今日のレースとのサーフェス/距離一致度で重み付けして平均する。
     // 単純平均だと、芝ダ混在・距離バラバラな過去4走がそのまま同列に扱われてしまうため。
@@ -73,11 +74,18 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     });
     const avgBaselineSpeedIndex = weightedBaseline?.value ?? null;
     const avgBaselineSpeedIndexConfidence = weightedBaseline?.confidencePercent ?? null;
-    // タイム指数に騎手係数を加味したブレンドスコア（偏差値の算出にのみ使う。
-    // avgBaselineSpeedIndex自体は「タイム指数単体」の値として維持する）。
-    const blendedSpeedIndex = computeBlendedSpeedIndex(avgBaselineSpeedIndex, horse.jockeyName);
 
-    return { ...horse, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence, blendedSpeedIndex };
+    // 距離変更（延長ほど減点・短縮ほど加点）・間隔（休み明けほど加点）。前走(races[0])基準。
+    const distanceIntervalZ = computeDistanceIntervalZ(horse.races[0] ?? null, {
+      trackType: todayTrackType,
+      distance: todayDistance,
+      dateStr: todayDateStr,
+    });
+    // タイム指数に騎手係数・距離変更・間隔を加味したブレンドスコア（偏差値の算出にのみ使う。
+    // avgBaselineSpeedIndex自体は「タイム指数単体」の値として維持する）。
+    const blendedSpeedIndex = computeBlendedSpeedIndex(avgBaselineSpeedIndex, horse.jockeyName, distanceIntervalZ);
+
+    return { ...horse, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence, blendedSpeedIndex };
     });
 
     // 偏差値は「今回の出走メンバー内での相対比較」という枠組みは維持しつつ、
@@ -123,6 +131,11 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             step={100}
           />
           <span>m</span>
+          <input
+            type="date"
+            value={todayDateIso}
+            onChange={(e) => setTodayDateIso(e.target.value || todayIsoDate())}
+          />
         </div>
         <input type="file" onChange={handleFileChange} />
         <textarea value={rawText} onChange={(e) => setRawText(e.target.value)} />
@@ -166,16 +179,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                     </span>
                     )}
                 </div>
-                {horse.isSlowFinisher && (
-                <div className="calc-group">
-                    <span className="race-slowdown-badge">⚠️ 失速傾向</span>
-                </div>
-                )}
-                {horse.isFastFinisher && (
-                <div className="calc-group">
-                    <span className="race-acceleration-badge">🚀 好走傾向</span>
-                </div>
-                )}
                 </td>
                     <td className="table-td-info">{horse.info}</td>
                    {[...Array(4)].map((_, raceIdx) => {
@@ -194,24 +197,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         </div>
                         ) : (
                         <div className="race-condition-badge">基準比較: -（該当データなし）</div>
-                        )}
-                        {race.last3FBaselineIndex != null ? (
-                        <div className="race-condition-badge">
-                            上がり3F基準比較: {race.last3FBaselineIndex.toFixed(2)}
-                            {race.last3FBaselineSampleCount != null && race.last3FBaselineSampleCount < LOW_CONFIDENCE_THRESHOLD ? `（参考値 n=${race.last3FBaselineSampleCount}）` : ''}
-                        </div>
-                        ) : (
-                        <div className="race-condition-badge">上がり3F基準比較: -（該当データなし）</div>
-                        )}
-                        {race.isSlowFinish && (
-                        <div className="race-slowdown-badge">
-                            ⚠️ 失速 (+{race.last3FExcessSeconds?.toFixed(2)}秒)
-                        </div>
-                        )}
-                        {race.isFastFinish && (
-                        <div className="race-acceleration-badge">
-                            🚀 好走の上がり ({race.last3FExcessSeconds?.toFixed(2)}秒)
-                        </div>
                         )}
                         </td>
                     );

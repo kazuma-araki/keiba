@@ -1,5 +1,6 @@
 import type { PastRace } from '../type/keibaType';
 import jockeyZScoreData from '../data/jockeyZScore.json';
+import distanceIntervalStats from '../data/distanceIntervalStats.json';
 
 /**
  * 過去走ごとの「基準比較指数」を平均する際の重み付けロジック。
@@ -37,16 +38,60 @@ export function computeJockeyZ(jockeyName: string | null | undefined): number {
   return jockeyZScoreMap[jockeyName] ?? 0;
 }
 
+// 距離変更（延長ほど減点・短縮ほど加点）・間隔（休み明けほど加点）を
+// avgBaselineSpeedIndexにどれだけ加味するかの重み。jra-batchの
+// distanceIntervalBlendBacktest.tsで4期間ウォークフォワード検証済み
+// （複勝回収率が4期間すべて、上位3件の大穴を除いても現行モデルを上回る組み合わせ）。
+const ALPHA_INTERVAL = 0.1;
+const ALPHA_DISTANCE = 0.05;
+
 /**
- * avgBaselineSpeedIndexに騎手係数を加味したブレンドスコアを計算する。
+ * 前走の距離・日付から、距離変更・間隔のzスコアを計算する。
+ * 前走が無い（初出走等）場合や日付が読み取れない場合は0（平均的）として扱う。
+ */
+export function computeDistanceIntervalZ(
+  recentRace: PastRace | null,
+  today: TodayRaceCondition & { dateStr?: string }
+): { distanceDeltaZ: number; intervalZ: number } {
+  if (!recentRace) return { distanceDeltaZ: 0, intervalZ: 0 };
+
+  const distanceDelta = today.distance - recentRace.distance;
+  const distanceDeltaZ = (distanceDelta - distanceIntervalStats.ddMean) / distanceIntervalStats.ddStd;
+
+  let intervalZ = 0;
+  const recentEpochDays = dateStrToEpochDays(recentRace.dateStr);
+  const todayEpochDays = today.dateStr ? dateStrToEpochDays(today.dateStr) : null;
+  if (recentEpochDays != null && todayEpochDays != null) {
+    const interval = todayEpochDays - recentEpochDays;
+    intervalZ = (interval - distanceIntervalStats.ivMean) / distanceIntervalStats.ivStd;
+  }
+
+  return { distanceDeltaZ, intervalZ };
+}
+
+function dateStrToEpochDays(dateStr: string): number | null {
+  const m = dateStr.match(/(\d+)年(\d+)月(\d+)日/);
+  if (!m) return null;
+  return Math.floor(Date.UTC(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10)) / 86400000);
+}
+
+/**
+ * avgBaselineSpeedIndexに騎手係数・距離変更・間隔を加味したブレンドスコアを計算する。
  * avgBaselineSpeedIndexがnull（過去走データが無い等）の場合はnullのまま返す。
  */
 export function computeBlendedSpeedIndex(
   avgBaselineSpeedIndex: number | null,
-  jockeyName: string | null | undefined
+  jockeyName: string | null | undefined,
+  distanceIntervalZ?: { distanceDeltaZ: number; intervalZ: number } | null
 ): number | null {
   if (avgBaselineSpeedIndex == null) return null;
-  return avgBaselineSpeedIndex + ALPHA_JOCKEY * computeJockeyZ(jockeyName);
+  const diz = distanceIntervalZ ?? { distanceDeltaZ: 0, intervalZ: 0 };
+  return (
+    avgBaselineSpeedIndex +
+    ALPHA_JOCKEY * computeJockeyZ(jockeyName) +
+    ALPHA_INTERVAL * diz.intervalZ -
+    ALPHA_DISTANCE * diz.distanceDeltaZ
+  );
 }
 
 export interface TodayRaceCondition {

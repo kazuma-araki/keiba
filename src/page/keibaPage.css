@@ -392,30 +392,6 @@
   margin-top: 4px;
 }
 
-/* 失速バッジ（1レース単位・馬単位の両方で使用） */
-.race-slowdown-badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: bold;
-  color: #b45309;
-  background-color: #fef3c7;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-top: 4px;
-}
-
-/* 加速（好走の上がり）バッジ（1レース単位・馬単位の両方で使用） */
-.race-acceleration-badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: bold;
-  color: #1d4ed8;
-  background-color: #dbeafe;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-top: 4px;
-}
-
 /* ==========================================================
    レスポンシブ対応（狭い画面ではカードの余白・文字を詰める）
    ========================================================== */
