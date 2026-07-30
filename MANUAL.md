@@ -51,7 +51,7 @@ npx ts-node importJraResults.ts 2025 --test
 
 `race_facts_<年>.jsonl` の1レコード例：
 ```json
-{"year":2025,"kaisai":1,"day":1,"raceNumber":1,"location":"小倉","raceDate":"2025年1月25日","distance":1700,"trackType":"ダ","condition":"重","raceClassText":"3歳未勝利","grade":null,"raceLast3F":37.1,"horseName":"グランキングオー","finishRank":1,"timeStr":"1:46.1","totalSeconds":106.1}
+{"year":2025,"kaisai":1,"day":1,"raceNumber":1,"location":"札幌","raceDate":"2025年7月26日","distance":1200,"trackType":"芝","condition":"良","raceClassText":"2歳未勝利","grade":null,"raceLast3F":34.7,"quinellaPayout":640,"horseName":"ショウナンカリス","finishRank":1,"timeStr":"1:08.9","totalSeconds":68.9,"odds":4.8,"jockeyName":"北村友一","weight":55,"bodyWeight":408,"bodyWeightChange":4}
 ```
 
 | フィールド | 内容 |
@@ -61,7 +61,12 @@ npx ts-node importJraResults.ts 2025 --test
 | `raceClassText` | レース条件・レース名の生テキスト（軽くクリーニング済み） |
 | `grade` | 重賞グレード（`G1`/`G2`/`G3`/`null`） |
 | `raceLast3F` | レース全体の参考上がり3F（秒）。**レース単位の値で、同じレースの馬全員で同じ値になる**（個々の馬の上がり3Fではない） |
+| `quinellaPayout` | 馬連配当（円、100円あたり）。**レース単位の値**（同じレースの馬全員で同じ値になる） |
 | `horseName`/`finishRank`/`timeStr`/`totalSeconds` | 出走馬名・着順・タイム |
+| `odds` | 単勝オッズ。同一レース内の相対比較・回収率検証専用（過去レースの値を別レースの分析に転用しない） |
+| `jockeyName` | 騎乗騎手名（`jockeyRoster_<年>.json`の名簿と突き合わせて抽出。空白除去済みの氏名） |
+| `weight` | 斤量（kg） |
+| `bodyWeight`/`bodyWeightChange` | 馬体重（kg）・前走からの増減（kg、初出走等で不明な場合は`null`） |
 
 ### 1-5. 基準タイムの集計
 
@@ -78,13 +83,28 @@ npx ts-node computeBaselines.ts 2025 2026 --groupBy=location,trackType,distance,
 - `baseline_<groupBy>_<年>.json`：コース×距離×馬場状態×グレードごとの**秒/mの平均・分散**（全体タイムの基準）
 - `baseline_last3f_<groupBy>_<年>.json`：同じキーでの**参考上がり3F（秒）の平均・分散**（レース単位で重複排除して集計）
 
+### 1-5b. 騎手成績の集計とブレンド用データの書き出し
+
+騎手勝率が「タイム指数だけでは説明できない予想外の好走/凡走」と相関することを4期間のウォークフォワード検証（`jockeyDiagnostic.ts`/`jockeyBlendBacktest.ts`）で確認済みです。以下の2ステップで、Webアプリ用の軽量な騎手係数JSONを作ります。
+
+```bash
+npx ts-node computeJockeyStats.ts 2025        # 騎手ごとの騎乗数・勝率・複勝率を集計
+npx ts-node exportJockeyBlend.ts 2025         # 騎乗数30以上の騎手だけを勝率でzスコア化した軽量JSONを書き出す
+```
+
+- `computeJockeyStats.ts` の出力（`jockeyStats_<年>.json`）は騎乗数の少ない騎手も含む生データで、検証・診断用
+- `exportJockeyBlend.ts` の出力（`jockeyZScore_<年>.json`）が実際にWebアプリへコピーするファイル
+
+騎手名の抽出には `jockeyRoster_2025.json`/`jockeyRoster_2026.json`（netkeibaの騎手リーディングページから取得した名簿。氏名の突き合わせにのみ使用）が必要です。
+
 ### 1-6. Webアプリへの反映
 
-生成された2ファイルを、Webアプリ側の静的データとして手動でコピーします（自動化はしていません）。
+生成されたファイルを、Webアプリ側の静的データとして手動でコピーします（自動化はしていません）。
 
 ```bash
 cp jra-batch/baseline_location-trackType-distance-condition-grade_<年>.json src/data/baseline.json
 cp jra-batch/baseline_last3f_location-trackType-distance-condition-grade_<年>.json src/data/last3fBaseline.json
+cp jra-batch/jockeyZScore_<年>.json src/data/jockeyZScore.json
 ```
 
 ---
@@ -108,13 +128,14 @@ npm run dev
 
 #### 偏差値（メインの指標）
 
-**今回の出走メンバー内での相対評価**です。中身は生タイムではなく、後述の「基準比較指数」を平均50・標準偏差10のスケールに変換したもの。
+**今回の出走メンバー内での相対評価**です。中身は生タイムではなく、後述の「基準比較指数」に騎手係数を加味した値を平均50・標準偏差10のスケールに変換したもの。
 
 ```
-偏差値 = 50 + (その馬の基準比較指数の加重平均 − メンバー全体の平均) × 10 ÷ メンバー全体の標準偏差
+ブレンドスコア = その馬の基準比較指数の加重平均 + 0.1 × 今日の騎乗騎手のzスコア
+偏差値 = 50 + (ブレンドスコア − メンバー全体の平均) × 10 ÷ メンバー全体の標準偏差
 ```
 
-高いほど、今回のメンバーの中で（コース・距離・馬場状態・グレードを補正した上で）強いと期待できる、という意味です。
+高いほど、今回のメンバーの中で（コース・距離・馬場状態・グレードを補正した上で）強いと期待できる、という意味です。騎手係数（`src/utils/raceWeighting.ts`の`computeJockeyZ`）は、jra-batchのtrainデータから集計した騎手勝率を平均・標準偏差でzスコア化したもので、騎乗数30未満・未収録の騎手は0（平均的）として扱われます。JRA出馬表HTMLのアップロード経由でのみ今日の騎乗騎手が取得でき、CSV手動貼り付け経路では常に0扱いになります（`avgBaselineSpeedIndex`自体は騎手係数を含まない、タイム指数単体の値のまま表示されます）。
 
 #### 基準比較指数（偏差値の中身）
 
@@ -158,13 +179,13 @@ npm run dev
 
 ### 2-4. データの更新
 
-`src/data/baseline.json` と `src/data/last3fBaseline.json` は、jra-batchの出力をビルド時に静的にバンドルしているだけです。実行時の通信は一切発生しません。最新の基準タイムを反映したい場合は、1-6の手順でコピーし直してから `npm run build`（または `npm run dev` を再起動）してください。
+`src/data/baseline.json`・`src/data/last3fBaseline.json`・`src/data/jockeyZScore.json` は、jra-batchの出力をビルド時に静的にバンドルしているだけです。実行時の通信は一切発生しません。最新のデータを反映したい場合は、1-6の手順でコピーし直してから `npm run build`（または `npm run dev` を再起動）してください。
 
 ---
 
 ## 3. 既知の制約・今後の拡張候補
 
-- **騎手・オッズ・馬体重・性齢・斤量は未対応**：生データ（JSONL）には含まれておらず、必要になった時点でパーサーを直すだけで済む設計にしています（PDFを取り直す必要はありません）
+- **オッズ・馬体重・性齢は分析に未使用**：`race_facts_<年>.jsonl`には既に含まれていますが（`odds`/`bodyWeight`/`bodyWeightChange`）、Webアプリの分析ロジックにはまだ組み込んでいません
 - **枠番・馬番は未パース**：内枠/外枠バイアスの分析はまだできません
 - **脚質（逃げ・先行・差し・追込）は未対応**：PDFにはコーナー通過順位の生データがあるものの、まだ利用していません
 - **クラス昇級・降級の判定は未対応**：`raceClassText`/`grade`は生データにあるが、「今日のクラス」との比較機能はまだ実装していません

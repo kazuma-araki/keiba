@@ -32,6 +32,9 @@ export interface PastRace {
 export interface HorseData {
   name: string;
   info: string;
+  // 今日のレースの騎乗騎手名（JRA出馬表HTMLアップロード経由のみ取得可能。
+  // CSV手動貼り付け経路では取得できないためnull）。
+  jockeyName?: string | null;
   // 【変更】パースに失敗した過去走はnullのままスロットを保持する。
   // 「前走・2走前・3走前・4走前」という位置の意味を守るため、
   // 失敗分を詰めて(compactして)配列を短くしないようにする。

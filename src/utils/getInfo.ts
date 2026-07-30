@@ -4,6 +4,7 @@ import { computeBaselineSpeedIndex, computeLast3FBaselineIndex } from "./baselin
 
 export interface ScrapedHorse {
   horseName: string;
+  jockeyName: string | null;
   race1: string;
   race2: string;
   race3: string;
@@ -91,6 +92,14 @@ export function parseJraHtml(htmlText: string): ScrapedHorse[] {
 
     if (!horseName || horseName.length > 9 || /[^ァ-ヶー]/.test(horseName)) return;
 
+    // 今日の騎手名：td.jockey内のp.jockey（今走の騎乗騎手）から取得する。
+    // 過去走側にも「div.jockey」（過去走時点の騎乗騎手）が別途あるが、pタグかつ
+    // 親がtd.jockeyという組み合わせで一意に区別できる。
+    const jockeyText = $(el).find('td.jockey p.jockey a').first().text()
+      .replace(/[\s　☆△▲◇]/g, '')
+      .trim();
+    const jockeyName = jockeyText.length > 0 ? jockeyText : null;
+
     // 過去走セルは常に「行の末尾4列」に固定されている
     const raceTds = tds.slice(-4);
     const races: string[] = [];
@@ -102,6 +111,7 @@ export function parseJraHtml(htmlText: string): ScrapedHorse[] {
     if (horseName && races.length > 0) {
       records.push({
         horseName,
+        jockeyName,
         race1: races[0] || 'データなし',
         race2: races[1] || 'データなし',
         race3: races[2] || 'データなし',

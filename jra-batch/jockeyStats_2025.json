@@ -1,0 +1,1360 @@
+{
+  "北村友一": {
+    "rides": 593,
+    "wins": 73,
+    "places": 180,
+    "winRate": 0.12310286677908938,
+    "placeRate": 0.30354131534569984
+  },
+  "鮫島克駿": {
+    "rides": 783,
+    "wins": 67,
+    "places": 208,
+    "winRate": 0.08556832694763729,
+    "placeRate": 0.2656449553001277
+  },
+  "小林美駒": {
+    "rides": 452,
+    "wins": 37,
+    "places": 106,
+    "winRate": 0.08185840707964602,
+    "placeRate": 0.2345132743362832
+  },
+  "荻野琢真": {
+    "rides": 202,
+    "wins": 5,
+    "places": 14,
+    "winRate": 0.024752475247524754,
+    "placeRate": 0.06930693069306931
+  },
+  "鷲頭虎太": {
+    "rides": 261,
+    "wins": 12,
+    "places": 47,
+    "winRate": 0.04597701149425287,
+    "placeRate": 0.18007662835249041
+  },
+  "丹内祐次": {
+    "rides": 1005,
+    "wins": 95,
+    "places": 299,
+    "winRate": 0.0945273631840796,
+    "placeRate": 0.2975124378109453
+  },
+  "黛弘人": {
+    "rides": 330,
+    "wins": 5,
+    "places": 43,
+    "winRate": 0.015151515151515152,
+    "placeRate": 0.1303030303030303
+  },
+  "舟山瑠泉": {
+    "rides": 337,
+    "wins": 19,
+    "places": 62,
+    "winRate": 0.05637982195845697,
+    "placeRate": 0.18397626112759644
+  },
+  "佐々木大輔": {
+    "rides": 869,
+    "wins": 80,
+    "places": 215,
+    "winRate": 0.09205983889528194,
+    "placeRate": 0.2474108170310702
+  },
+  "和田陽希": {
+    "rides": 327,
+    "wins": 11,
+    "places": 38,
+    "winRate": 0.03363914373088685,
+    "placeRate": 0.1162079510703364
+  },
+  "古川奈穂": {
+    "rides": 305,
+    "wins": 14,
+    "places": 48,
+    "winRate": 0.04590163934426229,
+    "placeRate": 0.15737704918032788
+  },
+  "池添謙一": {
+    "rides": 399,
+    "wins": 37,
+    "places": 102,
+    "winRate": 0.09273182957393483,
+    "placeRate": 0.2556390977443609
+  },
+  "斎藤新": {
+    "rides": 623,
+    "wins": 38,
+    "places": 113,
+    "winRate": 0.060995184590690206,
+    "placeRate": 0.18138041733547353
+  },
+  "古川吉洋": {
+    "rides": 482,
+    "wins": 27,
+    "places": 82,
+    "winRate": 0.056016597510373446,
+    "placeRate": 0.17012448132780084
+  },
+  "川又賢治": {
+    "rides": 214,
+    "wins": 7,
+    "places": 27,
+    "winRate": 0.03271028037383177,
+    "placeRate": 0.1261682242990654
+  },
+  "柴田裕一郎": {
+    "rides": 370,
+    "wins": 10,
+    "places": 39,
+    "winRate": 0.02702702702702703,
+    "placeRate": 0.10540540540540541
+  },
+  "森田誠也": {
+    "rides": 230,
+    "wins": 6,
+    "places": 29,
+    "winRate": 0.02608695652173913,
+    "placeRate": 0.12608695652173912
+  },
+  "横山武史": {
+    "rides": 769,
+    "wins": 110,
+    "places": 285,
+    "winRate": 0.14304291287386217,
+    "placeRate": 0.3706111833550065
+  },
+  "原田和真": {
+    "rides": 189,
+    "wins": 5,
+    "places": 16,
+    "winRate": 0.026455026455026454,
+    "placeRate": 0.08465608465608465
+  },
+  "松岡正海": {
+    "rides": 435,
+    "wins": 10,
+    "places": 69,
+    "winRate": 0.022988505747126436,
+    "placeRate": 0.15862068965517243
+  },
+  "浜中俊": {
+    "rides": 342,
+    "wins": 33,
+    "places": 101,
+    "winRate": 0.09649122807017543,
+    "placeRate": 0.2953216374269006
+  },
+  "吉田隼人": {
+    "rides": 308,
+    "wins": 12,
+    "places": 61,
+    "winRate": 0.03896103896103896,
+    "placeRate": 0.19805194805194806
+  },
+  "松本大輝": {
+    "rides": 346,
+    "wins": 24,
+    "places": 52,
+    "winRate": 0.06936416184971098,
+    "placeRate": 0.15028901734104047
+  },
+  "武豊": {
+    "rides": 575,
+    "wins": 72,
+    "places": 213,
+    "winRate": 0.12521739130434784,
+    "placeRate": 0.37043478260869567
+  },
+  "藤岡佑介": {
+    "rides": 358,
+    "wins": 49,
+    "places": 119,
+    "winRate": 0.13687150837988826,
+    "placeRate": 0.3324022346368715
+  },
+  "横山典弘": {
+    "rides": 311,
+    "wins": 41,
+    "places": 89,
+    "winRate": 0.13183279742765272,
+    "placeRate": 0.2861736334405145
+  },
+  "嶋田純次": {
+    "rides": 218,
+    "wins": 6,
+    "places": 32,
+    "winRate": 0.027522935779816515,
+    "placeRate": 0.14678899082568808
+  },
+  "橋木太希": {
+    "rides": 180,
+    "wins": 2,
+    "places": 12,
+    "winRate": 0.011111111111111112,
+    "placeRate": 0.06666666666666667
+  },
+  "高倉稜": {
+    "rides": 176,
+    "wins": 8,
+    "places": 23,
+    "winRate": 0.045454545454545456,
+    "placeRate": 0.13068181818181818
+  },
+  "菅原隆一": {
+    "rides": 70,
+    "wins": 1,
+    "places": 3,
+    "winRate": 0.014285714285714285,
+    "placeRate": 0.04285714285714286
+  },
+  "Ｒ．キング": {
+    "rides": 200,
+    "wins": 28,
+    "places": 63,
+    "winRate": 0.14,
+    "placeRate": 0.315
+  },
+  "菱田裕二": {
+    "rides": 531,
+    "wins": 23,
+    "places": 84,
+    "winRate": 0.04331450094161959,
+    "placeRate": 0.15819209039548024
+  },
+  "横山琉人": {
+    "rides": 506,
+    "wins": 27,
+    "places": 83,
+    "winRate": 0.0533596837944664,
+    "placeRate": 0.16403162055335968
+  },
+  "丸田恭介": {
+    "rides": 390,
+    "wins": 12,
+    "places": 48,
+    "winRate": 0.03076923076923077,
+    "placeRate": 0.12307692307692308
+  },
+  "小林脩斗": {
+    "rides": 230,
+    "wins": 5,
+    "places": 21,
+    "winRate": 0.021739130434782608,
+    "placeRate": 0.09130434782608696
+  },
+  "藤懸貴志": {
+    "rides": 287,
+    "wins": 7,
+    "places": 36,
+    "winRate": 0.024390243902439025,
+    "placeRate": 0.1254355400696864
+  },
+  "川田将雅": {
+    "rides": 506,
+    "wins": 105,
+    "places": 273,
+    "winRate": 0.2075098814229249,
+    "placeRate": 0.5395256916996047
+  },
+  "石川裕紀人": {
+    "rides": 470,
+    "wins": 28,
+    "places": 97,
+    "winRate": 0.059574468085106386,
+    "placeRate": 0.20638297872340425
+  },
+  "丸山元気": {
+    "rides": 500,
+    "wins": 33,
+    "places": 133,
+    "winRate": 0.066,
+    "placeRate": 0.266
+  },
+  "松山弘平": {
+    "rides": 833,
+    "wins": 128,
+    "places": 297,
+    "winRate": 0.15366146458583432,
+    "placeRate": 0.3565426170468187
+  },
+  "Ｃ．ルメール": {
+    "rides": 519,
+    "wins": 140,
+    "places": 318,
+    "winRate": 0.2697495183044316,
+    "placeRate": 0.6127167630057804
+  },
+  "横山和生": {
+    "rides": 580,
+    "wins": 77,
+    "places": 192,
+    "winRate": 0.13275862068965516,
+    "placeRate": 0.3310344827586207
+  },
+  "石川倭": {
+    "rides": 19,
+    "wins": 1,
+    "places": 1,
+    "winRate": 0.05263157894736842,
+    "placeRate": 0.05263157894736842
+  },
+  "原優介": {
+    "rides": 650,
+    "wins": 21,
+    "places": 79,
+    "winRate": 0.03230769230769231,
+    "placeRate": 0.12153846153846154
+  },
+  "岩田康誠": {
+    "rides": 502,
+    "wins": 43,
+    "places": 128,
+    "winRate": 0.08565737051792828,
+    "placeRate": 0.2549800796812749
+  },
+  "桑村真明": {
+    "rides": 7,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "木幡巧也": {
+    "rides": 675,
+    "wins": 26,
+    "places": 100,
+    "winRate": 0.03851851851851852,
+    "placeRate": 0.14814814814814814
+  },
+  "服部茂史": {
+    "rides": 7,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "小野楓馬": {
+    "rides": 4,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "Ａ．バデル": {
+    "rides": 67,
+    "wins": 11,
+    "places": 22,
+    "winRate": 0.16417910447761194,
+    "placeRate": 0.3283582089552239
+  },
+  "Ｃ．ウィリアムズ": {
+    "rides": 12,
+    "wins": 2,
+    "places": 4,
+    "winRate": 0.16666666666666666,
+    "placeRate": 0.3333333333333333
+  },
+  "本田正重": {
+    "rides": 14,
+    "wins": 1,
+    "places": 3,
+    "winRate": 0.07142857142857142,
+    "placeRate": 0.21428571428571427
+  },
+  "Ｆ．ゴンサルベス": {
+    "rides": 9,
+    "wins": 1,
+    "places": 3,
+    "winRate": 0.1111111111111111,
+    "placeRate": 0.3333333333333333
+  },
+  "戸崎圭太": {
+    "rides": 804,
+    "wins": 132,
+    "places": 341,
+    "winRate": 0.16417910447761194,
+    "placeRate": 0.42412935323383083
+  },
+  "坂井瑠星": {
+    "rides": 686,
+    "wins": 110,
+    "places": 264,
+    "winRate": 0.16034985422740525,
+    "placeRate": 0.3848396501457726
+  },
+  "Ｋ．ティータン": {
+    "rides": 12,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.08333333333333333
+  },
+  "落合玄太": {
+    "rides": 16,
+    "wins": 1,
+    "places": 3,
+    "winRate": 0.0625,
+    "placeRate": 0.1875
+  },
+  "Ｔ．ハマーハンセン": {
+    "rides": 5,
+    "wins": 2,
+    "places": 2,
+    "winRate": 0.4,
+    "placeRate": 0.4
+  },
+  "Ｃ．トーレス": {
+    "rides": 4,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "松若風馬": {
+    "rides": 519,
+    "wins": 24,
+    "places": 95,
+    "winRate": 0.046242774566473986,
+    "placeRate": 0.18304431599229287
+  },
+  "三浦皇成": {
+    "rides": 564,
+    "wins": 53,
+    "places": 179,
+    "winRate": 0.09397163120567376,
+    "placeRate": 0.3173758865248227
+  },
+  "阿部龍": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "泉谷楓真": {
+    "rides": 125,
+    "wins": 6,
+    "places": 21,
+    "winRate": 0.048,
+    "placeRate": 0.168
+  },
+  "石橋脩": {
+    "rides": 390,
+    "wins": 21,
+    "places": 70,
+    "winRate": 0.05384615384615385,
+    "placeRate": 0.1794871794871795
+  },
+  "中井裕二": {
+    "rides": 229,
+    "wins": 7,
+    "places": 31,
+    "winRate": 0.03056768558951965,
+    "placeRate": 0.13537117903930132
+  },
+  "川端海翼": {
+    "rides": 252,
+    "wins": 3,
+    "places": 21,
+    "winRate": 0.011904761904761904,
+    "placeRate": 0.08333333333333333
+  },
+  "小沢大仁": {
+    "rides": 641,
+    "wins": 32,
+    "places": 115,
+    "winRate": 0.0499219968798752,
+    "placeRate": 0.1794071762870515
+  },
+  "長浜鴻緒": {
+    "rides": 477,
+    "wins": 22,
+    "places": 76,
+    "winRate": 0.04612159329140461,
+    "placeRate": 0.15932914046121593
+  },
+  "上里直汰": {
+    "rides": 221,
+    "wins": 10,
+    "places": 22,
+    "winRate": 0.04524886877828054,
+    "placeRate": 0.09954751131221719
+  },
+  "酒井学": {
+    "rides": 417,
+    "wins": 14,
+    "places": 47,
+    "winRate": 0.03357314148681055,
+    "placeRate": 0.11270983213429256
+  },
+  "今村聖奈": {
+    "rides": 338,
+    "wins": 21,
+    "places": 56,
+    "winRate": 0.0621301775147929,
+    "placeRate": 0.16568047337278108
+  },
+  "武藤雅": {
+    "rides": 343,
+    "wins": 15,
+    "places": 45,
+    "winRate": 0.043731778425655975,
+    "placeRate": 0.13119533527696792
+  },
+  "柴田大知": {
+    "rides": 369,
+    "wins": 7,
+    "places": 30,
+    "winRate": 0.018970189701897018,
+    "placeRate": 0.08130081300813008
+  },
+  "国分恭介": {
+    "rides": 274,
+    "wins": 16,
+    "places": 62,
+    "winRate": 0.058394160583941604,
+    "placeRate": 0.22627737226277372
+  },
+  "菊沢一樹": {
+    "rides": 734,
+    "wins": 29,
+    "places": 116,
+    "winRate": 0.039509536784741145,
+    "placeRate": 0.15803814713896458
+  },
+  "秋山稔樹": {
+    "rides": 341,
+    "wins": 11,
+    "places": 44,
+    "winRate": 0.03225806451612903,
+    "placeRate": 0.12903225806451613
+  },
+  "野中悠太郎": {
+    "rides": 305,
+    "wins": 5,
+    "places": 24,
+    "winRate": 0.01639344262295082,
+    "placeRate": 0.07868852459016394
+  },
+  "杉原誠人": {
+    "rides": 409,
+    "wins": 18,
+    "places": 56,
+    "winRate": 0.044009779951100246,
+    "placeRate": 0.13691931540342298
+  },
+  "的場勇人": {
+    "rides": 58,
+    "wins": 1,
+    "places": 1,
+    "winRate": 0.017241379310344827,
+    "placeRate": 0.017241379310344827
+  },
+  "伊藤工真": {
+    "rides": 62,
+    "wins": 3,
+    "places": 10,
+    "winRate": 0.04838709677419355,
+    "placeRate": 0.16129032258064516
+  },
+  "坂口智康": {
+    "rides": 74,
+    "wins": 9,
+    "places": 19,
+    "winRate": 0.12162162162162163,
+    "placeRate": 0.25675675675675674
+  },
+  "吉田豊": {
+    "rides": 425,
+    "wins": 18,
+    "places": 71,
+    "winRate": 0.042352941176470586,
+    "placeRate": 0.16705882352941176
+  },
+  "石田拓郎": {
+    "rides": 374,
+    "wins": 14,
+    "places": 36,
+    "winRate": 0.0374331550802139,
+    "placeRate": 0.0962566844919786
+  },
+  "高杉吏麒": {
+    "rides": 837,
+    "wins": 74,
+    "places": 236,
+    "winRate": 0.0884109916367981,
+    "placeRate": 0.2819593787335723
+  },
+  "小崎綾也": {
+    "rides": 346,
+    "wins": 16,
+    "places": 56,
+    "winRate": 0.046242774566473986,
+    "placeRate": 0.16184971098265896
+  },
+  "石神深道": {
+    "rides": 459,
+    "wins": 18,
+    "places": 68,
+    "winRate": 0.0392156862745098,
+    "placeRate": 0.14814814814814814
+  },
+  "角田大和": {
+    "rides": 386,
+    "wins": 18,
+    "places": 68,
+    "winRate": 0.046632124352331605,
+    "placeRate": 0.17616580310880828
+  },
+  "田口貫太": {
+    "rides": 774,
+    "wins": 36,
+    "places": 149,
+    "winRate": 0.046511627906976744,
+    "placeRate": 0.1925064599483204
+  },
+  "亀田温心": {
+    "rides": 281,
+    "wins": 18,
+    "places": 45,
+    "winRate": 0.06405693950177936,
+    "placeRate": 0.1601423487544484
+  },
+  "水沼元輝": {
+    "rides": 196,
+    "wins": 4,
+    "places": 16,
+    "winRate": 0.02040816326530612,
+    "placeRate": 0.08163265306122448
+  },
+  "川須栄彦": {
+    "rides": 228,
+    "wins": 4,
+    "places": 24,
+    "winRate": 0.017543859649122806,
+    "placeRate": 0.10526315789473684
+  },
+  "荻野極": {
+    "rides": 634,
+    "wins": 62,
+    "places": 174,
+    "winRate": 0.09779179810725552,
+    "placeRate": 0.2744479495268139
+  },
+  "田中健": {
+    "rides": 62,
+    "wins": 4,
+    "places": 6,
+    "winRate": 0.06451612903225806,
+    "placeRate": 0.0967741935483871
+  },
+  "遠藤汰月": {
+    "rides": 310,
+    "wins": 5,
+    "places": 17,
+    "winRate": 0.016129032258064516,
+    "placeRate": 0.054838709677419356
+  },
+  "佐藤翔馬": {
+    "rides": 232,
+    "wins": 4,
+    "places": 16,
+    "winRate": 0.017241379310344827,
+    "placeRate": 0.06896551724137931
+  },
+  "長岡禎仁": {
+    "rides": 279,
+    "wins": 9,
+    "places": 40,
+    "winRate": 0.03225806451612903,
+    "placeRate": 0.14336917562724014
+  },
+  "谷原柚希": {
+    "rides": 66,
+    "wins": 0,
+    "places": 3,
+    "winRate": 0,
+    "placeRate": 0.045454545454545456
+  },
+  "宮崎北斗": {
+    "rides": 31,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.03225806451612903
+  },
+  "鮫島良太": {
+    "rides": 103,
+    "wins": 1,
+    "places": 14,
+    "winRate": 0.009708737864077669,
+    "placeRate": 0.13592233009708737
+  },
+  "永島まなみ": {
+    "rides": 465,
+    "wins": 19,
+    "places": 57,
+    "winRate": 0.04086021505376344,
+    "placeRate": 0.12258064516129032
+  },
+  "加藤祥太": {
+    "rides": 86,
+    "wins": 3,
+    "places": 10,
+    "winRate": 0.03488372093023256,
+    "placeRate": 0.11627906976744186
+  },
+  "木幡初也": {
+    "rides": 160,
+    "wins": 3,
+    "places": 16,
+    "winRate": 0.01875,
+    "placeRate": 0.1
+  },
+  "田辺裕信": {
+    "rides": 291,
+    "wins": 24,
+    "places": 71,
+    "winRate": 0.08247422680412371,
+    "placeRate": 0.24398625429553264
+  },
+  "河原田菜々": {
+    "rides": 273,
+    "wins": 4,
+    "places": 16,
+    "winRate": 0.014652014652014652,
+    "placeRate": 0.05860805860805861
+  },
+  "石神深一": {
+    "rides": 91,
+    "wins": 7,
+    "places": 21,
+    "winRate": 0.07692307692307693,
+    "placeRate": 0.23076923076923078
+  },
+  "御神本訓史": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "内田博幸": {
+    "rides": 581,
+    "wins": 21,
+    "places": 89,
+    "winRate": 0.03614457831325301,
+    "placeRate": 0.153184165232358
+  },
+  "水口優也": {
+    "rides": 85,
+    "wins": 2,
+    "places": 8,
+    "winRate": 0.023529411764705882,
+    "placeRate": 0.09411764705882353
+  },
+  "菅原明良": {
+    "rides": 724,
+    "wins": 63,
+    "places": 187,
+    "winRate": 0.08701657458563536,
+    "placeRate": 0.25828729281767954
+  },
+  "津村明秀": {
+    "rides": 662,
+    "wins": 51,
+    "places": 159,
+    "winRate": 0.0770392749244713,
+    "placeRate": 0.24018126888217523
+  },
+  "木幡育也": {
+    "rides": 124,
+    "wins": 0,
+    "places": 8,
+    "winRate": 0,
+    "placeRate": 0.06451612903225806
+  },
+  "土田真翔": {
+    "rides": 92,
+    "wins": 0,
+    "places": 4,
+    "winRate": 0,
+    "placeRate": 0.043478260869565216
+  },
+  "大野拓弥": {
+    "rides": 533,
+    "wins": 35,
+    "places": 105,
+    "winRate": 0.06566604127579738,
+    "placeRate": 0.19699812382739212
+  },
+  "江田照男": {
+    "rides": 304,
+    "wins": 3,
+    "places": 31,
+    "winRate": 0.009868421052631578,
+    "placeRate": 0.10197368421052631
+  },
+  "西塚洸二": {
+    "rides": 396,
+    "wins": 23,
+    "places": 66,
+    "winRate": 0.05808080808080808,
+    "placeRate": 0.16666666666666666
+  },
+  "小林凌大": {
+    "rides": 140,
+    "wins": 4,
+    "places": 13,
+    "winRate": 0.02857142857142857,
+    "placeRate": 0.09285714285714286
+  },
+  "岩部純二": {
+    "rides": 92,
+    "wins": 0,
+    "places": 5,
+    "winRate": 0,
+    "placeRate": 0.05434782608695652
+  },
+  "西村太一": {
+    "rides": 28,
+    "wins": 1,
+    "places": 4,
+    "winRate": 0.03571428571428571,
+    "placeRate": 0.14285714285714285
+  },
+  "山本咲希到": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "草野太郎": {
+    "rides": 87,
+    "wins": 7,
+    "places": 23,
+    "winRate": 0.08045977011494253,
+    "placeRate": 0.26436781609195403
+  },
+  "伴啓太": {
+    "rides": 84,
+    "wins": 8,
+    "places": 17,
+    "winRate": 0.09523809523809523,
+    "placeRate": 0.20238095238095238
+  },
+  "小野寺祐太": {
+    "rides": 90,
+    "wins": 6,
+    "places": 22,
+    "winRate": 0.06666666666666667,
+    "placeRate": 0.24444444444444444
+  },
+  "上野翔": {
+    "rides": 101,
+    "wins": 11,
+    "places": 33,
+    "winRate": 0.10891089108910891,
+    "placeRate": 0.32673267326732675
+  },
+  "小牧加矢太": {
+    "rides": 95,
+    "wins": 12,
+    "places": 41,
+    "winRate": 0.12631578947368421,
+    "placeRate": 0.43157894736842106
+  },
+  "森一馬": {
+    "rides": 70,
+    "wins": 8,
+    "places": 22,
+    "winRate": 0.11428571428571428,
+    "placeRate": 0.3142857142857143
+  },
+  "高田潤": {
+    "rides": 69,
+    "wins": 20,
+    "places": 35,
+    "winRate": 0.2898550724637681,
+    "placeRate": 0.5072463768115942
+  },
+  "難波剛健": {
+    "rides": 74,
+    "wins": 7,
+    "places": 17,
+    "winRate": 0.0945945945945946,
+    "placeRate": 0.22972972972972974
+  },
+  "黒岩悠": {
+    "rides": 72,
+    "wins": 1,
+    "places": 8,
+    "winRate": 0.013888888888888888,
+    "placeRate": 0.1111111111111111
+  },
+  "田村太雅": {
+    "rides": 22,
+    "wins": 1,
+    "places": 1,
+    "winRate": 0.045454545454545456,
+    "placeRate": 0.045454545454545456
+  },
+  "五十嵐雄祐": {
+    "rides": 66,
+    "wins": 6,
+    "places": 19,
+    "winRate": 0.09090909090909091,
+    "placeRate": 0.2878787878787879
+  },
+  "井上敏樹": {
+    "rides": 54,
+    "wins": 1,
+    "places": 6,
+    "winRate": 0.018518518518518517,
+    "placeRate": 0.1111111111111111
+  },
+  "和田竜二": {
+    "rides": 514,
+    "wins": 19,
+    "places": 96,
+    "winRate": 0.03696498054474708,
+    "placeRate": 0.1867704280155642
+  },
+  "Ｃ．デムーロ": {
+    "rides": 401,
+    "wins": 49,
+    "places": 127,
+    "winRate": 0.12219451371571072,
+    "placeRate": 0.3167082294264339
+  },
+  "中村将之": {
+    "rides": 40,
+    "wins": 2,
+    "places": 9,
+    "winRate": 0.05,
+    "placeRate": 0.225
+  },
+  "大江原圭": {
+    "rides": 93,
+    "wins": 6,
+    "places": 26,
+    "winRate": 0.06451612903225806,
+    "placeRate": 0.27956989247311825
+  },
+  "金子光希": {
+    "rides": 32,
+    "wins": 1,
+    "places": 6,
+    "winRate": 0.03125,
+    "placeRate": 0.1875
+  },
+  "太宰啓介": {
+    "rides": 210,
+    "wins": 6,
+    "places": 31,
+    "winRate": 0.02857142857142857,
+    "placeRate": 0.14761904761904762
+  },
+  "富田暁": {
+    "rides": 245,
+    "wins": 13,
+    "places": 49,
+    "winRate": 0.053061224489795916,
+    "placeRate": 0.2
+  },
+  "大久保友雅": {
+    "rides": 26,
+    "wins": 1,
+    "places": 3,
+    "winRate": 0.038461538461538464,
+    "placeRate": 0.11538461538461539
+  },
+  "江田勇亮": {
+    "rides": 31,
+    "wins": 0,
+    "places": 3,
+    "winRate": 0,
+    "placeRate": 0.0967741935483871
+  },
+  "国分優作": {
+    "rides": 267,
+    "wins": 7,
+    "places": 27,
+    "winRate": 0.026217228464419477,
+    "placeRate": 0.10112359550561797
+  },
+  "柴田善臣": {
+    "rides": 67,
+    "wins": 3,
+    "places": 8,
+    "winRate": 0.04477611940298507,
+    "placeRate": 0.11940298507462686
+  },
+  "Ａ．プーシャン": {
+    "rides": 119,
+    "wins": 15,
+    "places": 40,
+    "winRate": 0.12605042016806722,
+    "placeRate": 0.33613445378151263
+  },
+  "小坂忠士": {
+    "rides": 31,
+    "wins": 3,
+    "places": 13,
+    "winRate": 0.0967741935483871,
+    "placeRate": 0.41935483870967744
+  },
+  "北村宏司": {
+    "rides": 296,
+    "wins": 12,
+    "places": 52,
+    "winRate": 0.04054054054054054,
+    "placeRate": 0.17567567567567569
+  },
+  "吉村誠之助": {
+    "rides": 889,
+    "wins": 66,
+    "places": 192,
+    "winRate": 0.07424071991001124,
+    "placeRate": 0.21597300337457817
+  },
+  "西村淳也": {
+    "rides": 456,
+    "wins": 49,
+    "places": 148,
+    "winRate": 0.1074561403508772,
+    "placeRate": 0.32456140350877194
+  },
+  "田山旺佑": {
+    "rides": 345,
+    "wins": 16,
+    "places": 45,
+    "winRate": 0.0463768115942029,
+    "placeRate": 0.13043478260869565
+  },
+  "岩田望来": {
+    "rides": 669,
+    "wins": 95,
+    "places": 230,
+    "winRate": 0.14200298953662183,
+    "placeRate": 0.34379671150971597
+  },
+  "団野大成": {
+    "rides": 723,
+    "wins": 68,
+    "places": 198,
+    "winRate": 0.09405255878284924,
+    "placeRate": 0.27385892116182575
+  },
+  "山中悠希": {
+    "rides": 3,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "西谷誠": {
+    "rides": 22,
+    "wins": 1,
+    "places": 7,
+    "winRate": 0.045454545454545456,
+    "placeRate": 0.3181818181818182
+  },
+  "幸英明": {
+    "rides": 573,
+    "wins": 40,
+    "places": 113,
+    "winRate": 0.06980802792321117,
+    "placeRate": 0.19720767888307156
+  },
+  "山林堂信彦": {
+    "rides": 4,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "笹川翼": {
+    "rides": 8,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.125
+  },
+  "Ａ．シュタルケ": {
+    "rides": 147,
+    "wins": 9,
+    "places": 30,
+    "winRate": 0.061224489795918366,
+    "placeRate": 0.20408163265306123
+  },
+  "Ｍ．ディー": {
+    "rides": 128,
+    "wins": 5,
+    "places": 25,
+    "winRate": 0.0390625,
+    "placeRate": 0.1953125
+  },
+  "Ｊ．モレイラ": {
+    "rides": 109,
+    "wins": 35,
+    "places": 72,
+    "winRate": 0.3211009174311927,
+    "placeRate": 0.6605504587155964
+  },
+  "Ｄ．レーン": {
+    "rides": 161,
+    "wins": 38,
+    "places": 82,
+    "winRate": 0.2360248447204969,
+    "placeRate": 0.5093167701863354
+  },
+  "城戸義政": {
+    "rides": 115,
+    "wins": 1,
+    "places": 6,
+    "winRate": 0.008695652173913044,
+    "placeRate": 0.05217391304347826
+  },
+  "矢野貴之": {
+    "rides": 10,
+    "wins": 1,
+    "places": 2,
+    "winRate": 0.1,
+    "placeRate": 0.2
+  },
+  "渡辺竜也": {
+    "rides": 30,
+    "wins": 0,
+    "places": 4,
+    "winRate": 0,
+    "placeRate": 0.13333333333333333
+  },
+  "山本聡哉": {
+    "rides": 3,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "Ｔ．マーカンド": {
+    "rides": 152,
+    "wins": 19,
+    "places": 57,
+    "winRate": 0.125,
+    "placeRate": 0.375
+  },
+  "Ｍ．バルザローナ": {
+    "rides": 11,
+    "wins": 3,
+    "places": 5,
+    "winRate": 0.2727272727272727,
+    "placeRate": 0.45454545454545453
+  },
+  "Ｈ．ドイル": {
+    "rides": 24,
+    "wins": 2,
+    "places": 5,
+    "winRate": 0.08333333333333333,
+    "placeRate": 0.20833333333333334
+  },
+  "Ａ．ルメートル": {
+    "rides": 89,
+    "wins": 3,
+    "places": 12,
+    "winRate": 0.033707865168539325,
+    "placeRate": 0.1348314606741573
+  },
+  "菅原辰徳": {
+    "rides": 3,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "Ｋ．リョン": {
+    "rides": 3,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.3333333333333333
+  },
+  "福原杏": {
+    "rides": 3,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "和田翼": {
+    "rides": 18,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "岡田祥嗣": {
+    "rides": 20,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "広瀬航": {
+    "rides": 8,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.125
+  },
+  "加藤聡一": {
+    "rides": 4,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "Ｆ．ジェルー": {
+    "rides": 59,
+    "wins": 2,
+    "places": 16,
+    "winRate": 0.03389830508474576,
+    "placeRate": 0.2711864406779661
+  },
+  "丸野勝虎": {
+    "rides": 4,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "佐野遥久": {
+    "rides": 2,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.5
+  },
+  "松本一心": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "山本大翔": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "土方颯太": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "神尾香澄": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "青海大樹": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "谷内貫太": {
+    "rides": 2,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "塩津璃菜": {
+    "rides": 2,
+    "wins": 1,
+    "places": 1,
+    "winRate": 0.5,
+    "placeRate": 0.5
+  },
+  "森裕太朗": {
+    "rides": 4,
+    "wins": 0,
+    "places": 1,
+    "winRate": 0,
+    "placeRate": 0.25
+  },
+  "吉村智洋": {
+    "rides": 8,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "Ｍ．ザーラ": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "松戸政也": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "川原正一": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "大柿一真": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "永井孝典": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "山田義貴": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "金山昇馬": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  },
+  "鴨宮祥行": {
+    "rides": 1,
+    "wins": 0,
+    "places": 0,
+    "winRate": 0,
+    "placeRate": 0
+  }
+}

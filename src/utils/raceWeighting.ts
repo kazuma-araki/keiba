@@ -1,4 +1,5 @@
 import type { PastRace } from '../type/keibaType';
+import jockeyZScoreData from '../data/jockeyZScore.json';
 
 /**
  * 過去走ごとの「基準比較指数」を平均する際の重み付けロジック。
@@ -19,6 +20,34 @@ const DIFFERENT_SURFACE_WEIGHT = 0.3;
 // 距離差による重みの減衰（1mあたりの減衰量）と下限
 const DISTANCE_DECAY_PER_METER = 1 / 800; // 800m差でおよそ0.2まで減衰
 const MIN_DISTANCE_WEIGHT = 0.2;
+
+// 騎手勝率（jra-batchのjockeyBlendBacktest.tsで4期間ウォークフォワード検証済み）を
+// avgBaselineSpeedIndexにどれだけ加味するかの重み。alpha=0.1で単勝的中率が
+// 4期間すべてで安定して改善したため採用（回収率は市場並みで、それ自体を
+// 押し上げる効果は無いが、的中率の改善は再現性がある）。
+const ALPHA_JOCKEY = 0.1;
+const jockeyZScoreMap = jockeyZScoreData as Record<string, number>;
+
+/**
+ * 騎手名から、train期間の勝率を平均・標準偏差でzスコア化した値を引く。
+ * 未収録（騎乗数不足・新人・未知の騎手）の場合は0（平均的）として扱う。
+ */
+export function computeJockeyZ(jockeyName: string | null | undefined): number {
+  if (!jockeyName) return 0;
+  return jockeyZScoreMap[jockeyName] ?? 0;
+}
+
+/**
+ * avgBaselineSpeedIndexに騎手係数を加味したブレンドスコアを計算する。
+ * avgBaselineSpeedIndexがnull（過去走データが無い等）の場合はnullのまま返す。
+ */
+export function computeBlendedSpeedIndex(
+  avgBaselineSpeedIndex: number | null,
+  jockeyName: string | null | undefined
+): number | null {
+  if (avgBaselineSpeedIndex == null) return null;
+  return avgBaselineSpeedIndex + ALPHA_JOCKEY * computeJockeyZ(jockeyName);
+}
 
 export interface TodayRaceCondition {
   trackType: '芝' | 'ダ' | '障害';

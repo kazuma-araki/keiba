@@ -120,7 +120,88 @@ export interface ParsedRaceResult {
   // 1着・2着の馬は別途特定できるため、組み合わせ自体の抽出は不要。
   // 発売なし・抽出失敗時はnull。
   quinellaPayout: number | null;
+  // 単勝・複勝・枠連・馬単・ワイド・3連複・3連単の払戻金額（円、100円あたり）。
+  // 複勝・ワイドは1レースにつき複数（着順3頭・組み合わせ3通り、出走頭数が
+  // 少ないレースではそれ未満）あるため配列。並び順は着順（複勝＝1着→2着→3着の
+  // 馬の複勝配当、ワイド＝(1着-2着)→(1着-3着)→(2着-3着)の組み合わせ配当）で、
+  // JRAの払戻金セクションの掲載順そのまま。枠連は枠番の組み合わせが必要なため
+  // （枠番は本パーサーでは未抽出）、配当額のみ保持し馬番系の的中判定には使わない。
+  payouts: PayoutData;
   horses: ParsedHorseResult[];
+}
+
+export interface PayoutData {
+  win: number | null;
+  place: number[];
+  bracketQuinella: number | null;
+  quinella: number | null;
+  exacta: number | null;
+  wide: number[];
+  trio: number | null;
+  trifecta: number | null;
+}
+
+function emptyPayoutData(): PayoutData {
+  return { win: null, place: [], bracketQuinella: null, quinella: null, exacta: null, wide: [], trio: null, trifecta: null };
+}
+
+// 払戻金セクションのラベル。実データでは「単　勝」のように文字間にタブ/空白が
+// 入ることがあるため、ラベル自体の文字間にも\s*を挟んで照合する。
+// 順序はJRAの掲載順（この順で単調増加する前提でラベルの開始位置を境目に
+// 各ラベル〜次ラベルの間にある「金額円」をすべて拾う）。
+const PAYOUT_LABELS: { key: keyof Omit<PayoutData, 'place' | 'wide'> | 'place' | 'wide'; label: string }[] = [
+  { key: 'win', label: '単勝' },
+  { key: 'place', label: '複勝' },
+  { key: 'bracketQuinella', label: '枠連' },
+  { key: 'quinella', label: '馬連' },
+  { key: 'exacta', label: '馬単' },
+  { key: 'wide', label: 'ワイド' },
+  { key: 'trio', label: '3連複' },
+  { key: 'trifecta', label: '3連単' },
+];
+
+function labelRegexSource(label: string): string {
+  return label.split('').map(ch => ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s*');
+}
+
+/**
+ * 「払戻金」～「票数」（または末尾）の範囲から、ラベルごとの払戻額（円）を抽出する。
+ * 組み合わせの丸数字表記自体はフォント変換で文字化けするため使わず、
+ * ラベルの直後から次のラベルの直前までに現れる「数字＋円」だけを拾う
+ * （複勝・ワイドのように件数が可変でも、この方式なら件数を仮定せず正しく拾える）。
+ */
+function extractPayouts(block: string): PayoutData {
+  const result = emptyPayoutData();
+  const startMatch = block.match(/払\s*戻\s*金/);
+  if (!startMatch || startMatch.index == null) return result;
+
+  const sectionStart = startMatch.index + startMatch[0].length;
+  const rest = block.slice(sectionStart);
+  const endMatch = rest.match(/票\s*数|ハロンタイム/);
+  const section = endMatch && endMatch.index != null ? rest.slice(0, endMatch.index) : rest.slice(0, 400);
+
+  const labelMatches = PAYOUT_LABELS
+    .map(({ key, label }) => {
+      const m = section.match(new RegExp(labelRegexSource(label)));
+      return m && m.index != null ? { key, start: m.index, end: m.index + m[0].length } : null;
+    })
+    .filter((m): m is { key: typeof PAYOUT_LABELS[number]['key']; start: number; end: number } => m !== null)
+    .sort((a, b) => a.start - b.start);
+
+  for (let i = 0; i < labelMatches.length; i++) {
+    const { key, end } = labelMatches[i];
+    const nextStart = i + 1 < labelMatches.length ? labelMatches[i + 1].start : section.length;
+    const segment = section.slice(end, nextStart);
+    const amounts = Array.from(segment.matchAll(/(\d[\d，]*)円/g)).map(m => parseInt(m[1].replace(/，/g, ''), 10));
+
+    if (key === 'place' || key === 'wide') {
+      result[key] = amounts;
+    } else {
+      result[key] = amounts[0] ?? null;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -281,11 +362,11 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
     const referenceLast3F =
       last3FCandidate !== null && last3FCandidate >= 30 && last3FCandidate <= 50 ? last3FCandidate : null;
 
-    // 馬連配当：「馬 連」ラベル直後、組み合わせの丸数字（文字化けする）を挟んで
-    // 「○○円」の金額が続く。組み合わせ自体は着順から特定できるため金額だけ拾えば十分。
-    // 「枠連」と誤マッチしないよう「馬」に続く「連」だけを対象にする。
-    const quinellaMatch = block.match(/馬\s*連[^\d]{0,10}([\d，]{2,8})円/);
-    const quinellaPayout = quinellaMatch ? parseInt(quinellaMatch[1].replace(/，/g, ''), 10) : null;
+    // 全馬券種の払戻金（円、100円あたり）。「払戻金」ラベル以降だけを対象にしているため、
+    // 同じ「馬連」等のラベルがそれより前の「売得金」（投票額）セクションに出てきても
+    // 混同しない。
+    const payouts = extractPayouts(block);
+    const quinellaPayout = payouts.quinella;
 
     // 出走馬一覧：「（N頭）」より前の範囲だけを対象にする
     const headCountMatch = block.match(/（(\d+)頭）/);
@@ -311,6 +392,7 @@ export function parseDayResultText(rawText: string, diagnostics?: ParseDiagnosti
         grade,
         referenceLast3F,
         quinellaPayout,
+        payouts,
         horses,
       });
     } else if (diagnostics) {

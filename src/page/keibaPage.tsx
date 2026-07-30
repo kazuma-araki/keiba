@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { parseCsvToHorses, scrapedHorsesToHorseData, scrapedHorsesToCsvText } from '../utils/horseParser';
 import { parseJraHtml } from '../utils/getInfo';
 import { LOW_CONFIDENCE_THRESHOLD } from '../utils/baseline';
-import { computeWeightedBaselineSpeedIndex } from '../utils/raceWeighting';
+import { computeWeightedBaselineSpeedIndex, computeBlendedSpeedIndex } from '../utils/raceWeighting';
 import type { TodayRaceCondition } from '../utils/raceWeighting';
 import type { HorseData, PastRace } from '../type/keibaType';
 import './keibaPage.css';
@@ -73,22 +73,25 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     });
     const avgBaselineSpeedIndex = weightedBaseline?.value ?? null;
     const avgBaselineSpeedIndexConfidence = weightedBaseline?.confidencePercent ?? null;
+    // タイム指数に騎手係数を加味したブレンドスコア（偏差値の算出にのみ使う。
+    // avgBaselineSpeedIndex自体は「タイム指数単体」の値として維持する）。
+    const blendedSpeedIndex = computeBlendedSpeedIndex(avgBaselineSpeedIndex, horse.jockeyName);
 
-    return { ...horse, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence };
+    return { ...horse, isSlowFinisher, isFastFinisher, avgBaselineSpeedIndex, avgBaselineSpeedIndexConfidence, blendedSpeedIndex };
     });
 
     // 偏差値は「今回の出走メンバー内での相対比較」という枠組みは維持しつつ、
     // 中身は条件補正していない生の秒/m平均ではなく、コース・距離・
-    // 馬場状態・グレードで正規化済みのavgBaselineSpeedIndexを使う。
+    // 馬場状態・グレードで正規化した上で騎手係数も加味したblendedSpeedIndexを使う。
     const baselineAverages = horsesWithStats
-      .map(h => h.avgBaselineSpeedIndex)
+      .map(h => h.blendedSpeedIndex)
       .filter((v): v is number => v !== null);
     const groupAvg = baselineAverages.length > 0 ? baselineAverages.reduce((a, b) => a + b, 0) / baselineAverages.length : 0;
     const stdDev = Math.sqrt(baselineAverages.map(x => Math.pow(x - groupAvg, 2)).reduce((a, b) => a + b, 0) / (baselineAverages.length || 1));
 
     const withDeviation = horsesWithStats.map(h => ({
       ...h,
-      deviation: h.avgBaselineSpeedIndex == null ? 0 : 50 + ((h.avgBaselineSpeedIndex - groupAvg) * 10 / (stdDev || 1))
+      deviation: h.blendedSpeedIndex == null ? 0 : 50 + ((h.blendedSpeedIndex - groupAvg) * 10 / (stdDev || 1))
     }));
 
     if (sortBy === 'deviation') return [...withDeviation].sort((a, b) => b.deviation - a.deviation);

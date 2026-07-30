@@ -7,7 +7,7 @@ import type { ScrapedHorse } from "./getInfo";
  * CSVテキスト由来でも、HTMLスクレイピングの構造化データ由来でも、
  * 最終的なレース文字列→PastRaceへの変換はこの1箇所だけを通る。
  */
-function buildHorseData(name: string, info: string, raceTexts: string[]): HorseData {
+function buildHorseData(name: string, info: string, raceTexts: string[], jockeyName: string | null = null): HorseData {
   const races: PastRace[] = [];
 
   for (const text of raceTexts.slice(0, 4)) {
@@ -16,7 +16,7 @@ function buildHorseData(name: string, info: string, raceTexts: string[]): HorseD
     if (raceObj) races.push(raceObj);
   }
 
-  return { name, info, races };
+  return { name, info, races, jockeyName };
 }
 
 /**
@@ -89,7 +89,7 @@ export function parseCsvToHorses(csvText: string): HorseData[] {
  */
 export function scrapedHorsesToHorseData(scraped: ScrapedHorse[]): HorseData[] {
   return scraped.map(h =>
-    buildHorseData(h.horseName, '', [h.race1, h.race2, h.race3, h.race4])
+    buildHorseData(h.horseName, '', [h.race1, h.race2, h.race3, h.race4], h.jockeyName)
   );
 }
 

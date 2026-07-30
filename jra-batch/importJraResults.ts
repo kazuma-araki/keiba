@@ -129,6 +129,16 @@ interface RaceFactRecord {
   raceLast3F: number | null;
   // 馬連配当（円、100円あたり）。同じレースの馬全員で同じ値になる（レース単位の値のため）。
   quinellaPayout: number | null;
+  // 単勝・複勝・枠連・馬単・ワイド・3連複・3連単の払戻金（円、100円あたり）。
+  // いずれもレース単位の値（同じレースの馬全員で同じ値になる）。複勝・ワイドは
+  // 着順3頭・組み合わせ3通り分（頭数が少ないレースではそれ未満）の配列。
+  winPayout: number | null;
+  placePayouts: number[];
+  bracketQuinellaPayout: number | null;
+  exactaPayout: number | null;
+  widePayouts: number[];
+  trioPayout: number | null;
+  trifectaPayout: number | null;
   horseName: string;
   finishRank: number;
   timeStr: string;
@@ -160,6 +170,13 @@ function racesToFactRecords(races: ParsedRaceResult[]): RaceFactRecord[] {
         grade: race.grade,
         raceLast3F: race.referenceLast3F,
         quinellaPayout: race.quinellaPayout,
+        winPayout: race.payouts.win,
+        placePayouts: race.payouts.place,
+        bracketQuinellaPayout: race.payouts.bracketQuinella,
+        exactaPayout: race.payouts.exacta,
+        widePayouts: race.payouts.wide,
+        trioPayout: race.payouts.trio,
+        trifectaPayout: race.payouts.trifecta,
         horseName: horse.name,
         finishRank: horse.finishRank,
         timeStr: horse.timeStr,
