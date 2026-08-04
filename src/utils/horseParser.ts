@@ -8,13 +8,9 @@ import type { ScrapedHorse } from "./getInfo";
  * 最終的なレース文字列→PastRaceへの変換はこの1箇所だけを通る。
  */
 function buildHorseData(name: string, info: string, raceTexts: string[], jockeyName: string | null = null): HorseData {
-  const races: PastRace[] = [];
-
-  for (const text of raceTexts.slice(0, 4)) {
-    if (!text) continue;
-    const raceObj = parseRaceText(text);
-    if (raceObj) races.push(raceObj);
-  }
+  const races: (PastRace | null)[] = raceTexts
+    .slice(0, 4)
+    .map(text => (text ? parseRaceText(text) : null));
 
   return { name, info, races, jockeyName };
 }

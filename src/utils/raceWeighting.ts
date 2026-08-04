@@ -141,9 +141,18 @@ export interface WeightedBaselineResult {
   confidencePercent: number;
 }
 
+// 信頼度が低いほどvalueを0（平均的）へ縮約(shrinkage)する強さ。jra-batchの
+// confidenceShrinkageBacktest.tsで4期間ウォークフォワード検証済み：市場人気と
+// モデル1位評価が食い違うレースでは、モデル側の方が基準タイムのサンプルが薄い
+// 条件での好走を実力と誤読している傾向があった。信頼度の平方根で縮約する
+// （power=0.5）のが、複勝的中率・回収率とも現行(縮約なし)を上回り最も頑健。
+const CONFIDENCE_SHRINKAGE_POWER = 0.5;
+
 /**
  * 過去走配列（nullスロットを含む）から、重み付き平均のbaselineSpeedIndexを計算する。
  * baselineSpeedIndexが無い（該当基準なし）走は重み0として扱われ、寄与しない。
+ * 信頼度が低い（過去走の大半が今日と条件違い、または基準タイムのサンプルが薄い）ほど、
+ * valueを0へ縮約する。confidencePercentはこの縮約前の、本来の信頼度を表す。
  */
 export function computeWeightedBaselineSpeedIndex(
   races: (PastRace | null)[],
@@ -161,8 +170,11 @@ export function computeWeightedBaselineSpeedIndex(
 
   if (weightSum <= 0) return null;
 
+  const rawValue = weightedSum / weightSum;
+  const confidenceFraction = Math.min(1, weightSum / MAX_POSSIBLE_WEIGHT_SUM);
+
   return {
-    value: weightedSum / weightSum,
-    confidencePercent: Math.min(100, (weightSum / MAX_POSSIBLE_WEIGHT_SUM) * 100),
+    value: rawValue * Math.pow(confidenceFraction, CONFIDENCE_SHRINKAGE_POWER),
+    confidencePercent: confidenceFraction * 100,
   };
 }
